@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using eWolf.PipeBuilder.Helpers;
 using eWolf.PipeBuilder.Data;
 using eWolf.PipeBuilder;
@@ -10,16 +11,24 @@ using Unity.XR.CoreUtils;
 using TMPro;
 using System.Diagnostics;
 using UnityEditor;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEditor.Rendering;
 
 public class NewPipeLogic : MonoBehaviour
 {
     public GameObject settingsUI;
-    public GameObject grabbablePrefab;
+    public GameObject nodeHolo1;
+    private GameObject firstNode;
+
+    private Material pipeMaterial;
+    private XRGrabInteractable grabInteractable;
     public Transform spawnPoint;
     public List<Vector3> nodePositions = new List<Vector3>();
 
+    public GameObject PlacedPipe;
     public GameObject creatorMenuHeader;
     private TextMeshProUGUI menuHeader;
+    public InputActionAsset inputActions;
 
     public Transform MainCamera;
 
@@ -43,21 +52,37 @@ public class NewPipeLogic : MonoBehaviour
         // Initialize
         UnityEngine.Debug.Log("StartTutorial");
         currentStep = PipeCreationSteps.Step1_NewPipeBttn;
-        // Instantiate(settingsUI);
         settingsUI.SetActive(false);
         PerformStep();
     }
-
-    private void Update()
+    void Update()
     {
         if (stepChange)
         {
+            UnityEngine.Debug.Log(stepChange);
             stepChange = false;
             PerformStep();
         }
+
+        if (currentStep == PipeCreationSteps.Step4_GrabObject)
+        {
+            if (grabInteractable.isSelected)
+            {
+                PerformStep();
+            }
+        }
+
+        if (currentStep == PipeCreationSteps.Step5_StorePosition)
+        {
+            if (!grabInteractable.isSelected)
+            {
+                PerformStep();
+            }
+        }
     }
 
-    public void OnDisable(){
+    public void OnDisable()
+    {
         settingsUI.SetActive(false);
     }
 
@@ -76,30 +101,44 @@ public class NewPipeLogic : MonoBehaviour
                 break;
 
             case PipeCreationSteps.Step2_SetSettings:
-                menuHeader = creatorMenuHeader.GetComponentInChildren<TextMeshProUGUI>();
-                menuHeader.SetText("Prueba123");
                 UnityEngine.Debug.Log(currentStep);
+                UnityEngine.Debug.Log("Save pipe settings and instansiate prefab");
+                currentStep = PipeCreationSteps.Step3_ReadyToPlace;
+                PerformStep();
                 break;
 
             case PipeCreationSteps.Step3_ReadyToPlace:
-                // Handle UI button click to start the grabbing process
-                if (Input.GetKeyDown(KeyCode.Space)) // Replace with your UI button click event
-                {
-                    settingsUI.SetActive(false);
-                    SpawnGrabbableObject();
-                    currentStep = PipeCreationSteps.Step4_GrabObject;
-                    stepChange = true;
-                }
+                menuHeader = creatorMenuHeader.GetComponentInChildren<TextMeshProUGUI>();
+                menuHeader.SetText("Set the starting point of your pipe");
+                // Spawn the node
+                firstNode = Instantiate(nodeHolo1);
+                UnityEngine.Debug.Log(firstNode.transform.position);
+                firstNode.transform.SetParent(settingsUI.transform);
+                newPosition = new Vector3(0, 2f, -0.836f); // Replace x, y, z with your desired coordinates;
+                firstNode.transform.localPosition = newPosition;
+                UnityEngine.Debug.Log(firstNode.transform.position);
+                grabInteractable = firstNode.GetComponent<XRGrabInteractable>();
+                UnityEngine.Debug.Log("Waiting for grab, step4");
+                currentStep = PipeCreationSteps.Step4_GrabObject;
                 break;
 
             case PipeCreationSteps.Step4_GrabObject:
+                settingsUI.SetActive(false);
+                currentStep = PipeCreationSteps.Step5_StorePosition;
+                // if(FirstNodeGrabbed)
+                // {
+                // }
                 // Wait for the user to grab and place the object
                 // You might use some input events or conditions to detect grabbing
                 break;
 
             case PipeCreationSteps.Step5_StorePosition:
+                UnityEngine.Debug.Log("Pelota suelta");
                 // Store the position of the placed object
-                nodePositions.Add(grabbablePrefab.transform.position);
+                nodePositions.Add(firstNode.transform.position);
+                PlacedPipe.SetActive(true);
+                PlacedPipe.transform.position = firstNode.transform.position;
+                PlacedPipe.GetComponent<PipeBase>().Material = pipeMaterial;
                 currentStep = PipeCreationSteps.Step6_SpawnNextObject;
                 break;
 
@@ -107,7 +146,7 @@ public class NewPipeLogic : MonoBehaviour
                 // Spawn the next object next to the previously placed object
                 if (Input.GetKeyDown(KeyCode.Space)) // Replace with your condition to spawn next object
                 {
-                    SpawnGrabbableObject();
+                    // SpawnGrabbableObject();
                     currentStep = PipeCreationSteps.Step4_GrabObject; // Repeat the process for the next object
                 }
                 break;
@@ -150,15 +189,16 @@ public class NewPipeLogic : MonoBehaviour
 
     public void ChangeMaterial(Renderer rendererUI)
     {
+        pipeMaterial = rendererUI.material;
         Pipe.Material = rendererUI.material;
         materialText = materialHeader.GetComponentInChildren<TextMeshProUGUI>();
-        materialText.text = rendererUI.material.name.Replace(" (Instance)","");
-    }   
-
-    void SpawnGrabbableObject()
-    {
-        // Instantiate the grabbable object at the spawn point
-        GameObject newObject = Instantiate(grabbablePrefab, spawnPoint.position, Quaternion.identity);
-        // You might want to configure the object or add components here
+        materialText.text = rendererUI.material.name.Replace(" (Instance)", "");
     }
+
+    // void SpawnGrabbableObject()
+    // {
+    //     // Instantiate the grabbable object at the spawn point
+    //     GameObject newObject = Instantiate(nodeHolo, spawnPoint.position, Quaternion.identity);
+    //     // You might want to configure the object or add components here
+    // }
 }

@@ -37,7 +37,7 @@ public class WristUI : MonoBehaviour
         if (!NewPipeLogic.enabled)
         {
             Debug.Log(NewPipeLogic.enabled);
-            NewPipeLogic.OnEnable();
+            NewPipeLogic.enabled = true;
         }
         else
         {
