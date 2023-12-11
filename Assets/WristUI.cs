@@ -11,7 +11,7 @@ public class WristUI : MonoBehaviour
 {
     public InputActionAsset inputActions;
 
-    public NewPipeLogic NewPipeLogic;
+    public GameObject NewPipeLogic;
 
     private Canvas _wristUICanvas;
     public GameObject UI;
@@ -33,16 +33,8 @@ public class WristUI : MonoBehaviour
     }
 
     public void PipeCreation()
-    {
-        if (!NewPipeLogic.enabled)
-        {
-            Debug.Log(NewPipeLogic.enabled);
-            NewPipeLogic.enabled = true;
-        }
-        else
-        {
-            NewPipeLogic.OnDisable();
-        }
+    {   
+        NewPipeLogic = Instantiate(NewPipeLogic);
     }
 
 

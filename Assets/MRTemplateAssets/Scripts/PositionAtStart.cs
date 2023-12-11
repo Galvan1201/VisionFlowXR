@@ -6,6 +6,7 @@ public class PositionAtStart : MonoBehaviour
     [SerializeField]
     [Tooltip("The starting target.")]
     Transform m_Target;
+    
 
     [SerializeField]
     [Tooltip("Adjusts the follow point from the target by this amount.")]
@@ -19,6 +20,7 @@ public class PositionAtStart : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        m_Target = GameObject.Find("Main Camera").GetComponent<Transform>();
         yield return new WaitForSeconds(k_StartDelay);
         var targetRotation = m_Target.rotation;
         var newTransform = m_Target;

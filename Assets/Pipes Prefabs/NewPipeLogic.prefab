@@ -39,18 +39,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833532755641435914}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75954bca91e6a244daf70238c5de7593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settingsUI: {fileID: 0}
-  grabbablePrefab: {fileID: 7190559763459483146, guid: cec25213e5ba74da1ae7d3e2036e000d, type: 3}
-  spawnPoint: {fileID: 0}
+  settingsUI: {fileID: 3358758037788261645, guid: ea5a5e5a07c2f1143a66a7ac3edbf713, type: 3}
+  nodeHolo1: {fileID: 5258930261453003455, guid: ffe047825a1479c4e8b232b08d823839, type: 3}
   nodePositions: []
-  MainCamera: {fileID: 0}
-  Pipe: {fileID: 0}
-  sliderParent: {fileID: 0}
-  toggleFlanges: {fileID: 0}
-  materialCube: {fileID: 5215598158109823579, guid: cef03412d673532468499e53b318c610, type: 3}
-  materialHeader: {fileID: 0}
+  PlacedPipe: {fileID: 0}
+  inputActions: {fileID: 0}
