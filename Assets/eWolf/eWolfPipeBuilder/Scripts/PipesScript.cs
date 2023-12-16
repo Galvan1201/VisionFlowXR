@@ -6,9 +6,9 @@ using Unity.VisualScripting;
 using eWolf.PipeBuilder.Data;
 using UnityEngine.UI;
 
-namespace eWolf.PipeBuilder.Exmaples
+namespace eWolf.PipeBuilder.VisionFlowScripts
 {
-    public class PiepesScript : MonoBehaviour
+    public class PipesScript : MonoBehaviour
     {
 
         private PipeNode _pipeNode;
@@ -16,6 +16,8 @@ namespace eWolf.PipeBuilder.Exmaples
         public PipeBase Pipe;
         public PipeNode currentPipeNode = null;
         public PipeSettings pipeSettings;
+        public List<Vector3> nodesPositions;
+
         private void ClearAllPipes()
         {
             foreach (Transform child in Pipe.transform)
@@ -101,20 +103,20 @@ namespace eWolf.PipeBuilder.Exmaples
             Pipe.BuildPipes();
         }
         
-        private void CreateBasicPipeList()
+        public void CreateBasicPipeList()
         {
-            List<Vector3> positions = new List<Vector3>();
-            positions.Add(new Vector3(0, 0, 0));
-            positions.Add(new Vector3(4, 0, 0));
-            positions.Add(new Vector3(4, 0, 4));
-            positions.Add(new Vector3(0, 0, 4));
-            positions.Add(new Vector3(0, -4, 4));
-            positions.Add(new Vector3(0, -4, 0));
+            // List<Vector3> positions = new List<Vector3>();
+            // positions.Add(new Vector3(0, 0, 0));
+            // positions.Add(new Vector3(4, 0, 0));
+            // positions.Add(new Vector3(4, 0, 4));
+            // positions.Add(new Vector3(0, 0, 4));
+            // positions.Add(new Vector3(0, -4, 4));
+            // positions.Add(new Vector3(0, -4, 0));
 
             GameObject go = Pipe.AddPipes();
             bool first = true;
             PipeNode currentPipeNode = null;
-            foreach (Vector3 pos in positions)
+            foreach (Vector3 pos in nodesPositions)
             {
                 if (first)
                 {
@@ -127,6 +129,7 @@ namespace eWolf.PipeBuilder.Exmaples
                 }
                 currentPipeNode.transform.position = pos;
             }
+            Pipe.SetAllModifed();
             Pipe.BuildPipes();
         }
 

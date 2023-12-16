@@ -4,28 +4,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using eWolf.PipeBuilder.Helpers;
-using eWolf.PipeBuilder.Data;
 using eWolf.PipeBuilder;
-using Unity.XR.CoreUtils;
+using eWolf.PipeBuilder.VisionFlowScripts;
 using TMPro;
-using System.Diagnostics;
-using UnityEditor;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEditor.Rendering;
-using UnityEngine.Rendering;
+using eWolf.PipeBuilder.Data;
+
 
 public class NewPipeLogic : MonoBehaviour
 {
     public GameObject settingsUI;
     public GameObject nodeHolo1;
     private GameObject firstNode;
+    private GameObject secondNode;
 
     private Material pipeMaterial;
     private XRGrabInteractable grabInteractable;
     public List<Vector3> nodePositions = new List<Vector3>();
 
-    public GameObject PlacedPipe;
+    public GameObject pipeToPlace;
+    private PipeSettings pipeToPlaceSettings;
+    private float radiusToSet;
+    private bool flangeToSet;
+
 
     private Transform content;
 
@@ -37,6 +38,7 @@ public class NewPipeLogic : MonoBehaviour
     private PipeBase Pipe;
 
     private Slider slider;
+    private Toggle toggle;
 
     enum PipeCreationSteps
     {
@@ -45,7 +47,7 @@ public class NewPipeLogic : MonoBehaviour
         Step3_ReadyToPlace,
         Step4_GrabObject,
         Step5_ConfirmPosition,
-        Step6_SpawnNextObject
+        Step6_ConfirmNode2
     }
 
     PipeCreationSteps currentStep;
@@ -56,7 +58,18 @@ public class NewPipeLogic : MonoBehaviour
         // Initialize
         UnityEngine.Debug.Log("StartTutorial");
         currentStep = PipeCreationSteps.Step1_NewPipeBttn;
-        settingsUI = Instantiate(settingsUI);
+        MainCamera = GameObject.Find("Main Camera").GetComponent<Transform>();
+
+        // Set the position in front of the main camera
+        float distanceFromCamera = 1f; // Adjust the distance as needed
+        Vector3 newPosition = MainCamera.position + MainCamera.forward * distanceFromCamera;
+        newPosition += new Vector3(0, -0.4f, 0);
+        // Calculate the rotation to face the camera only in the y-axis
+        Quaternion newRotation = Quaternion.LookRotation(new Vector3(MainCamera.forward.x, 0, MainCamera.forward.z));
+        // Instantiate the UI with the calculated position and rotation
+        settingsUI = Instantiate(settingsUI, newPosition, newRotation);
+
+        //Find menu content and UIPipe
         content = settingsUI.transform.Find("NewPipeCreatorMenu").Find("Content");
         Pipe = settingsUI.transform.Find("NewPipeCreatorMenu").Find("NewPipeShow").GetComponent<PipeBase>();
         PerformStep();
@@ -68,11 +81,6 @@ public class NewPipeLogic : MonoBehaviour
             UnityEngine.Debug.Log(stepChange);
             stepChange = false;
             PerformStep();
-        }
-
-        if (currentStep == PipeCreationSteps.Step2_SetSettings)
-        {
-            slider.onValueChanged.AddListener(delegate { ChangeRadiusOnMenu(); });
         }
 
         if (currentStep == PipeCreationSteps.Step4_GrabObject)
@@ -100,6 +108,24 @@ public class NewPipeLogic : MonoBehaviour
                 UnityEngine.Debug.Log("grabbing, hide canvas");
             }
         }
+
+        if (currentStep == PipeCreationSteps.Step6_ConfirmNode2)
+        {
+            // UnityEngine.Debug.Log(firstNode.GetComponentInChildren<Canvas>().enabled);
+            //Show confirm
+            if (!grabInteractable.isSelected && !secondNode.GetComponentInChildren<Canvas>().enabled)
+            {
+                firstNode.GetComponentInChildren<Canvas>().enabled = true;
+                UnityEngine.Debug.Log("mostrar canvas");
+            }
+
+            //if grabbed hide confirm 
+            if (grabInteractable.isSelected && secondNode.GetComponentInChildren<Canvas>().enabled)
+            {
+                firstNode.GetComponentInChildren<Canvas>().enabled = false;
+                UnityEngine.Debug.Log("grabbing, hide canvas");
+            }
+        }
     }
 
     public void OnDisable()
@@ -115,40 +141,23 @@ public class NewPipeLogic : MonoBehaviour
             case PipeCreationSteps.Step1_NewPipeBttn:
                 UnityEngine.Debug.Log("Step 1: OpenCanvas");
                 settingsUI.SetActive(true);
-                MainCamera = GameObject.Find("Main Camera").GetComponent<Transform>();
-
-                // Set the position in front of the main camera
-                float distanceFromCamera = 2.0f; // Adjust the distance as needed
-                Vector3 newPosition = MainCamera.position + MainCamera.forward * distanceFromCamera;
-
-                // Make sure there is a Rigidbody component attached to the settingsUI
-                Rigidbody rigidbody = settingsUI.GetComponent<Rigidbody>();
-                if (rigidbody != null)
-                {
-                    // Temporarily set the Rigidbody to kinematic
-                    bool wasKinematic = rigidbody.isKinematic;
-                    rigidbody.isKinematic = true;
-
-                    // Set the position
-                    settingsUI.transform.position = newPosition;
-
-                    // Restore the original kinematic state
-                    rigidbody.isKinematic = wasKinematic;
-                }
-                else
-                {
-                    // If there is no Rigidbody, just set the position directly
-                    settingsUI.transform.position = newPosition;
-                }
-
                 UnityEngine.Debug.Log(content.Find("Radius Slider").Find("Slider").GetComponent<Slider>());
+
+                //Add listeners of Sliders and toggles
                 slider = content.Find("Radius Slider").Find("Slider").GetComponent<Slider>();
+                slider.onValueChanged.AddListener(ChangeRadiusOnMenu);
+                toggle = content.Find("Flange Toggle").Find("Offset Anchor").GetComponentInChildren<Toggle>();
+                toggle.onValueChanged.AddListener(ToggleFlangesOnMenu);
+
                 currentStep = PipeCreationSteps.Step2_SetSettings;
+                content.Find("Continue button").GetComponent<Button>().onClick.AddListener(PerformStep);
                 break;
 
             case PipeCreationSteps.Step2_SetSettings:
                 UnityEngine.Debug.Log(currentStep);
                 UnityEngine.Debug.Log("Save pipe settings and instansiate prefab");
+                content.gameObject.SetActive(false);
+                Pipe.gameObject.SetActive(false);
                 currentStep = PipeCreationSteps.Step3_ReadyToPlace;
                 PerformStep();
                 break;
@@ -160,7 +169,7 @@ public class NewPipeLogic : MonoBehaviour
                 firstNode = Instantiate(nodeHolo1);
                 UnityEngine.Debug.Log(firstNode.transform.position);
                 firstNode.transform.SetParent(settingsUI.transform);
-                newPosition = new Vector3(0, 2f, -0.836f); // Replace x, y, z with your desired coordinates;
+                Vector3 newPosition = new Vector3(0, 2f, -0.836f); // Replace x, y, z with your desired coordinates;
                 firstNode.transform.localPosition = newPosition;
                 UnityEngine.Debug.Log(firstNode.transform.position);
                 grabInteractable = firstNode.GetComponent<XRGrabInteractable>();
@@ -171,9 +180,7 @@ public class NewPipeLogic : MonoBehaviour
             case PipeCreationSteps.Step4_GrabObject:
                 settingsUI.SetActive(false);
                 currentStep = PipeCreationSteps.Step5_ConfirmPosition;
-                // if(FirstNodeGrabbed)
-                // {
-                // }
+                firstNode.transform.Find("Canvas").Find("Accept").GetComponent<Button>().onClick.AddListener(PerformStep);
                 // Wait for the user to grab and place the object
                 // You might use some input events or conditions to detect grabbing
                 break;
@@ -181,21 +188,33 @@ public class NewPipeLogic : MonoBehaviour
             case PipeCreationSteps.Step5_ConfirmPosition:
                 UnityEngine.Debug.Log("Position confirmed, hide canvas");
                 firstNode.GetComponentInChildren<Canvas>().enabled = false;
-                // Store the position of the placed object
+                firstNode.transform.parent = null;
+                grabInteractable.enabled = false;
+                // Store the position of the first node on the list
                 nodePositions.Add(firstNode.transform.position);
-                // PlacedPipe.SetActive(true);
-                // PlacedPipe.transform.position = firstNode.transform.position;
-                // PlacedPipe.GetComponent<PipeBase>().Material = pipeMaterial;
-                currentStep = PipeCreationSteps.Step6_SpawnNextObject;
+                newPosition = new Vector3(0, 0.1f, 0.1f) + firstNode.transform.position; // Replace x, y, z with your desired coordinates;
+                secondNode = Instantiate(nodeHolo1, newPosition, Quaternion.identity);
+                secondNode.GetComponentInChildren<Canvas>().enabled = true;
+                currentStep = PipeCreationSteps.Step6_ConfirmNode2;
+                secondNode.transform.Find("Canvas").Find("Accept").GetComponent<Button>().onClick.AddListener(PerformStep);
                 break;
 
-            case PipeCreationSteps.Step6_SpawnNextObject:
-                // Spawn the next object next to the previously placed object
-                if (Input.GetKeyDown(KeyCode.Space)) // Replace with your condition to spawn next object
-                {
-                    // SpawnGrabbableObject();
-                    currentStep = PipeCreationSteps.Step4_GrabObject; // Repeat the process for the next object
-                }
+            case PipeCreationSteps.Step6_ConfirmNode2:
+                // Store the position of the first node on the list
+                nodePositions.Add(secondNode.transform.position);
+                firstNode.SetActive(false);
+                secondNode.SetActive(false);
+                //Places the pipe and sets its components
+                pipeToPlace = Instantiate(pipeToPlace);
+                pipeToPlaceSettings = pipeToPlace.GetComponent<PipeBase>().PipeSettings;
+                pipeToPlaceSettings.Radius = radiusToSet;
+                pipeToPlaceSettings.FlangeDetail.Flange = flangeToSet;
+                pipeToPlace.GetComponent<PipeBase>().Material = pipeMaterial;
+                //Sends the nodesList to the custom pipe builder
+                PipesScript pipesScript = pipeToPlace.GetComponent<PipesScript>();
+                pipesScript.nodesPositions = nodePositions;
+                pipesScript.CreateBasicPipeList();
+                pipeToPlace.SetActive(true);
                 break;
 
             // Add more steps as needed
@@ -209,21 +228,23 @@ public class NewPipeLogic : MonoBehaviour
     private Slider diameter;
     private TextMeshProUGUI radiusText;
 
-    public void ChangeRadiusOnMenu()
+    public void ChangeRadiusOnMenu(float radius)
     {
         Pipe.PipeSettings.Radius = slider.value / 100 / 4; //a mm/ de diametro a radio
         Pipe.SetAllModifed();
         Pipe.BuildPipes();
         radiusText = content.Find("Radius Slider").Find("Value").GetComponent<TextMeshProUGUI>();
         radiusText.text = slider.value.ToString();
+        radiusToSet = radius / 1000;
     }
 
     // Toggles flanges
-    public void ToggleFlangesOnMenu()
+    public void ToggleFlangesOnMenu(bool state)
     {
-        Pipe.PipeSettings.FlangeDetail.Flange = content.Find("Flange Toggle").Find("Offset Anchor").GetComponentInChildren<Toggle>().isOn;
+        Pipe.PipeSettings.FlangeDetail.Flange = state;
         Pipe.SetAllModifed();
         Pipe.BuildPipes();
+        flangeToSet = state;
     }
 
     // Change material

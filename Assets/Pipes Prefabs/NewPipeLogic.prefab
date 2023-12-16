@@ -47,5 +47,5 @@ MonoBehaviour:
   settingsUI: {fileID: 3358758037788261645, guid: ea5a5e5a07c2f1143a66a7ac3edbf713, type: 3}
   nodeHolo1: {fileID: 5258930261453003455, guid: ffe047825a1479c4e8b232b08d823839, type: 3}
   nodePositions: []
-  PlacedPipe: {fileID: 0}
+  pipeToPlace: {fileID: 8984254354758505195, guid: b5b9daa193262b540825d2e20eb0ac8f, type: 3}
   inputActions: {fileID: 0}
