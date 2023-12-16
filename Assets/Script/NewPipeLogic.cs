@@ -52,7 +52,6 @@ public class NewPipeLogic : MonoBehaviour
     }
 
     PipeCreationSteps currentStep;
-    bool stepChange;
 
     public void OnEnable()
     {
@@ -78,12 +77,6 @@ public class NewPipeLogic : MonoBehaviour
     }
     void Update()
     {
-        if (stepChange)
-        {
-            UnityEngine.Debug.Log(stepChange);
-            stepChange = false;
-            PerformStep();
-        }
 
         if (currentStep == PipeCreationSteps.Step4_GrabObject)
         {
@@ -264,6 +257,8 @@ public class NewPipeLogic : MonoBehaviour
         pipeInUI.Material = rendererUI.material;
         materialText = content.Find("Materials").Find("Scroll UI Sample").Find("MatName").GetComponent<TextMeshProUGUI>();
         materialText.text = rendererUI.material.name.Replace(" (Instance)", "");
+        pipeInUI.SetAllModifed();
+        pipeInUI.BuildPipes();
     }
 
     // void SpawnGrabbableObject()
