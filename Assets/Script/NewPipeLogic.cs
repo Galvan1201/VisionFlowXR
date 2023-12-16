@@ -18,14 +18,15 @@ public class NewPipeLogic : MonoBehaviour
     private GameObject firstNode;
     private GameObject secondNode;
 
-    private Material pipeMaterial;
     private XRGrabInteractable grabInteractable;
     public List<Vector3> nodePositions = new List<Vector3>();
 
+    // pipeInUI to be placed references
     public GameObject pipeToPlace;
     private PipeSettings pipeToPlaceSettings;
-    private float radiusToSet;
-    private bool flangeToSet;
+    private float radiusToSet = 10 / 1000;
+    private bool flangeToSet = true;
+    private Material materialToSet;
 
 
     private Transform content;
@@ -35,7 +36,7 @@ public class NewPipeLogic : MonoBehaviour
 
     private Transform MainCamera;
 
-    private PipeBase Pipe;
+    private PipeBase pipeInUI;
 
     private Slider slider;
     private Toggle toggle;
@@ -71,7 +72,8 @@ public class NewPipeLogic : MonoBehaviour
 
         //Find menu content and UIPipe
         content = settingsUI.transform.Find("NewPipeCreatorMenu").Find("Content");
-        Pipe = settingsUI.transform.Find("NewPipeCreatorMenu").Find("NewPipeShow").GetComponent<PipeBase>();
+        pipeInUI = settingsUI.transform.Find("NewPipeCreatorMenu").Find("NewPipeShow").GetComponent<PipeBase>();
+        pipeInUI.BuildPipes();
         PerformStep();
     }
     void Update()
@@ -98,14 +100,12 @@ public class NewPipeLogic : MonoBehaviour
             if (!grabInteractable.isSelected && !firstNode.GetComponentInChildren<Canvas>().enabled)
             {
                 firstNode.GetComponentInChildren<Canvas>().enabled = true;
-                UnityEngine.Debug.Log("mostrar canvas");
             }
 
             //if grabbed hide confirm 
             if (grabInteractable.isSelected && firstNode.GetComponentInChildren<Canvas>().enabled)
             {
                 firstNode.GetComponentInChildren<Canvas>().enabled = false;
-                UnityEngine.Debug.Log("grabbing, hide canvas");
             }
         }
 
@@ -115,15 +115,13 @@ public class NewPipeLogic : MonoBehaviour
             //Show confirm
             if (!grabInteractable.isSelected && !secondNode.GetComponentInChildren<Canvas>().enabled)
             {
-                firstNode.GetComponentInChildren<Canvas>().enabled = true;
-                UnityEngine.Debug.Log("mostrar canvas");
+                secondNode.GetComponentInChildren<Canvas>().enabled = true;
             }
 
             //if grabbed hide confirm 
             if (grabInteractable.isSelected && secondNode.GetComponentInChildren<Canvas>().enabled)
             {
-                firstNode.GetComponentInChildren<Canvas>().enabled = false;
-                UnityEngine.Debug.Log("grabbing, hide canvas");
+                secondNode.GetComponentInChildren<Canvas>().enabled = false;
             }
         }
     }
@@ -141,7 +139,6 @@ public class NewPipeLogic : MonoBehaviour
             case PipeCreationSteps.Step1_NewPipeBttn:
                 UnityEngine.Debug.Log("Step 1: OpenCanvas");
                 settingsUI.SetActive(true);
-                UnityEngine.Debug.Log(content.Find("Radius Slider").Find("Slider").GetComponent<Slider>());
 
                 //Add listeners of Sliders and toggles
                 slider = content.Find("Radius Slider").Find("Slider").GetComponent<Slider>();
@@ -157,7 +154,7 @@ public class NewPipeLogic : MonoBehaviour
                 UnityEngine.Debug.Log(currentStep);
                 UnityEngine.Debug.Log("Save pipe settings and instansiate prefab");
                 content.gameObject.SetActive(false);
-                Pipe.gameObject.SetActive(false);
+                pipeInUI.gameObject.SetActive(false);
                 currentStep = PipeCreationSteps.Step3_ReadyToPlace;
                 PerformStep();
                 break;
@@ -209,7 +206,19 @@ public class NewPipeLogic : MonoBehaviour
                 pipeToPlaceSettings = pipeToPlace.GetComponent<PipeBase>().PipeSettings;
                 pipeToPlaceSettings.Radius = radiusToSet;
                 pipeToPlaceSettings.FlangeDetail.Flange = flangeToSet;
-                pipeToPlace.GetComponent<PipeBase>().Material = pipeMaterial;
+                pipeToPlaceSettings.FlangeDetail.Size = radiusToSet/2;
+                pipeToPlaceSettings.FlangeDetail.Length = radiusToSet*2;
+                //Intervalo a 1 metro, cambiar.
+                pipeToPlaceSettings.FlangeDetail.Interval = 1;
+                if (materialToSet != null)
+                {
+                    pipeToPlace.GetComponent<PipeBase>().Material = materialToSet;
+                }
+                else
+                {
+                    // Set a default value if materialToSet is null
+                    pipeToPlace.GetComponent<PipeBase>().Material = pipeInUI.Material; // replace defaultMaterial with the desired default material
+                }
                 //Sends the nodesList to the custom pipe builder
                 PipesScript pipesScript = pipeToPlace.GetComponent<PipesScript>();
                 pipesScript.nodesPositions = nodePositions;
@@ -225,14 +234,13 @@ public class NewPipeLogic : MonoBehaviour
     }
 
     // Change radius of pipe with slider
-    private Slider diameter;
     private TextMeshProUGUI radiusText;
 
     public void ChangeRadiusOnMenu(float radius)
     {
-        Pipe.PipeSettings.Radius = slider.value / 100 / 4; //a mm/ de diametro a radio
-        Pipe.SetAllModifed();
-        Pipe.BuildPipes();
+        pipeInUI.PipeSettings.Radius = slider.value / 100 / 4; //a mm/ de diametro a radio
+        pipeInUI.SetAllModifed();
+        pipeInUI.BuildPipes();
         radiusText = content.Find("Radius Slider").Find("Value").GetComponent<TextMeshProUGUI>();
         radiusText.text = slider.value.ToString();
         radiusToSet = radius / 1000;
@@ -241,9 +249,9 @@ public class NewPipeLogic : MonoBehaviour
     // Toggles flanges
     public void ToggleFlangesOnMenu(bool state)
     {
-        Pipe.PipeSettings.FlangeDetail.Flange = state;
-        Pipe.SetAllModifed();
-        Pipe.BuildPipes();
+        pipeInUI.PipeSettings.FlangeDetail.Flange = state;
+        pipeInUI.SetAllModifed();
+        pipeInUI.BuildPipes();
         flangeToSet = state;
     }
 
@@ -252,8 +260,8 @@ public class NewPipeLogic : MonoBehaviour
 
     public void ChangeMaterial(Renderer rendererUI)
     {
-        pipeMaterial = rendererUI.material;
-        Pipe.Material = rendererUI.material;
+        materialToSet = rendererUI.material;
+        pipeInUI.Material = rendererUI.material;
         materialText = content.Find("Materials").Find("Scroll UI Sample").Find("MatName").GetComponent<TextMeshProUGUI>();
         materialText.text = rendererUI.material.name.Replace(" (Instance)", "");
     }

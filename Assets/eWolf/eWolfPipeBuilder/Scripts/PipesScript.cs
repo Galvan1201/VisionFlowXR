@@ -135,7 +135,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
 
         private void Update()
         {
-            Pipe.BuildPipes();
+            // Pipe.BuildPipes();
         }
 
         private void OnGUI()
