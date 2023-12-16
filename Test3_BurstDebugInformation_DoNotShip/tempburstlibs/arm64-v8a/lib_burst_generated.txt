@@ -51,6 +51,8 @@ Library: D:\VisionFlow\VisionFlowXR\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib
 --assembly-defines=Wave.Essence.Hand.Model;
 --assembly-defines=Wave.Essence.InputModule;
 --assembly-defines=Wave.Essence.Interaction.Mode;
+--assembly-defines=Wave.Essence.ScenePerception.Demo;
+--assembly-defines=Wave.Essence.ScenePerception;
 --assembly-defines=Wave.Native;
 --assembly-defines=Wave.XRSDK;
 --generate-link-xml=Temp\burst.link.xml
@@ -113,6 +115,8 @@ Library: D:\VisionFlow\VisionFlowXR\Temp\BurstOutput\tempburstlibs\arm64-v8a\lib
 --assembly-defines=Wave.Essence.Hand.Model;
 --assembly-defines=Wave.Essence.InputModule;
 --assembly-defines=Wave.Essence.Interaction.Mode;
+--assembly-defines=Wave.Essence.ScenePerception.Demo;
+--assembly-defines=Wave.Essence.ScenePerception;
 --assembly-defines=Wave.Native;
 --assembly-defines=Wave.XRSDK;
 --generate-link-xml=Temp\burst.link.xml
