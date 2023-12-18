@@ -5,12 +5,13 @@ using eWolf.PipeBuilder.Data;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using UnityEngine.XR.Interaction.Toolkit;
+using System.Runtime.CompilerServices;
 
 namespace eWolf.PipeBuilder.VisionFlowScripts
 {
     public class PipesScript : MonoBehaviour
     {
-        public bool editMode = false;
+        public bool editMode = true;
         public GameObject nodeEditMode;
         private PipeNode _pipeNode;
         // Link to an pipe builder base so we will have all the setting we need.
@@ -18,6 +19,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         public PipeNode currentPipeNode = null;
         public PipeSettings pipeSettings;
         public List<Vector3> nodesPositions;
+        private List<Vector3> newNodesPositions; 
         public float radius;
 
         private void ClearAllPipes()
@@ -46,48 +48,67 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
 
         // }
 
-    public void ToggleEditMode()
-    {
-        editMode = !editMode;
-        Debug.Log("EditMode toggled to: " + editMode);
-
-        foreach (Transform child in transform)
+        public void ToggleEditMode()
         {
-            // Check if the child has already been instanced
-            if (child.childCount != 0)
+            editMode = !editMode;
+            Debug.Log("EditMode toggled to: " + editMode);
+
+            foreach (Transform child in transform)
             {
-                // Child has already been instanced, toggle its visibility
-                GameObject childPrefab = child.GetChild(0).gameObject;
-                childPrefab.SetActive(editMode);
-                Debug.Log("Prefab visibility toggled to: " + editMode);
+                // Check if the child has already been instanced
+                if (child.childCount != 0)
+                {
+                    // Child has already been instanced, toggle its visibility
+                    GameObject childPrefab = child.GetChild(0).gameObject;
+                    childPrefab.SetActive(editMode);
+                    Debug.Log("Prefab visibility toggled to: " + editMode);
+                }
             }
         }
-    }
 
-    public void UpdateEditNodes()
-    {
-        foreach (Transform node in transform)
+        public void UpdateEditNodes()
         {
-            // Check if the child has already been instanced
-            if (node.childCount == 0)
+            foreach (Transform node in transform)
             {
-                // node hasn't been instanced, instantiate the prefab
-                GameObject instantiatedPrefab = Instantiate(nodeEditMode, node.position, node.rotation, node);
-                Debug.Log("Prefab instantiated at position: " + instantiatedPrefab.transform.position);
-                nodeEditMode.transform.localScale = new Vector3(radius * 2, radius * 2, radius * 2);
-                XRGrabInteractable grabInteractable = node.AddComponent<XRGrabInteractable>();
-                grabInteractable.attachTransform = instantiatedPrefab.transform;
+                // Check if the child has already been instanced
+                if (node.childCount == 0)
+                {
+                    // node hasn't been instanced, instantiate the prefab
+                    GameObject instantiatedPrefab = Instantiate(nodeEditMode, node.position, node.rotation, node);
+                    Debug.Log("Prefab instantiated at position: " + instantiatedPrefab.transform.position);
+                    nodeEditMode.transform.localScale = new Vector3(radius * 2, radius * 2, radius * 2);
+                    XRGrabInteractable grabInteractable = node.AddComponent<XRGrabInteractable>();
+                    grabInteractable.attachTransform = instantiatedPrefab.transform;
+                    grabInteractable.useDynamicAttach = true;
+                    grabInteractable.trackRotation = false;
+                    grabInteractable.trackScale = false;
+                    grabInteractable.throwOnDetach = false;
+                    grabInteractable.movementType = XRBaseInteractable.MovementType.Kinematic;
+                    Rigidbody nodeRigidbody = node.GetComponent<Rigidbody>();
+                    nodeRigidbody.useGravity = false;
+                    nodeRigidbody.isKinematic = true;
+                }
             }
         }
-    }
-
-        private void AddNode()
+        // Call this function when rebuilding the pipe is necessary
+        public void UpdateNodesList()
         {
-            if (_pipeNode.CanExtendPipes())
+            foreach (Transform node in transform)
+            {
+                // insert the node position into the list
+                newNodesPositions.Add(node.position);
+            }
+            nodesPositions = newNodesPositions;
+            newNodesPositions.Clear();
+        }
+
+        private void AddNode(PipeNode currentNode)
+        {
+            if (currentNode.CanExtendPipes())
             {
                 currentPipeNode = currentPipeNode.ExtendPipe().GetComponent<PipeNode>();
                 // GameObject child = originalGameObject.transform.GetChild(0).gameObject;
-                PipeBase pb = NodeHelper.GetPipeBase(_pipeNode.transform);
+                PipeBase pb = NodeHelper.GetPipeBase(currentNode.transform);
                 pb.BuildPipes();
                 Debug.Log("Selected object: " + pb); // Add this line to log the selected object
                 // return;
@@ -132,14 +153,14 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 }
             }
         }
-        public Slider radiusSlider;
-        public void ChangeRadiusOnMenu()
-        {   
-            Pipe.PipeSettings.Radius = radiusSlider.value/100/2; //a mm/ de diametro a radio
-            Pipe.SetAllModifed();
-            Pipe.BuildPipes();
-        }
-        
+        // public Slider radiusSlider;
+        // public void ChangeRadiusOnMenu()
+        // {
+        //     Pipe.PipeSettings.Radius = radiusSlider.value / 100 / 2; //a mm/ de diametro a radio
+        //     Pipe.SetAllModifed();
+        //     Pipe.BuildPipes();
+        // }
+
         public void CreateBasicPipeList()
         {
             // List<Vector3> positions = new List<Vector3>();
@@ -166,6 +187,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 }
                 currentPipeNode.transform.position = pos;
             }
+            Destroy(transform.GetChild(0).gameObject);
             Pipe.SetAllModifed();
             Pipe.BuildPipes();
         }

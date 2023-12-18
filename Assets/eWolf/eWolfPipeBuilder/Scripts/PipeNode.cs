@@ -139,7 +139,7 @@ namespace eWolf.PipeBuilder
             {
                 //Seteo de longitud
                 Debug.Log(pb.PipeSettings.Radius);
-                newPipe.x += pb.PipeSettings.Radius*4;
+                newPipe.x += pb.PipeSettings.Radius*0.5f;
             }
 
             return AddPipe(newPipe, transform.parent);
@@ -165,20 +165,22 @@ namespace eWolf.PipeBuilder
             return Quaternion.AngleAxis(-90, Vector3.up) * GetDirection(position);
         }
 
-        public void OnDrawGizmosSelected()
-        {
-            NodeHelper.DrawAll(gameObject);
 
-            if (_cachedPosition != transform.position)
-            {
-                _cachedPosition = transform.position;
-                PipeBase pb = NodeHelper.GetPipeBase(transform);
-                if (pb.PipeSettings.AutoBuild)
-                {
-                    pb.BuildPipes();
-                }
-            }
-        }
+        // //Descomentar si quiere usar el gizmo
+        // public void OnDrawGizmosSelected()
+        // {
+        //     NodeHelper.DrawAll(gameObject);
+
+        //     if (_cachedPosition != transform.position)
+        //     {
+        //         _cachedPosition = transform.position;
+        //         PipeBase pb = NodeHelper.GetPipeBase(transform);
+        //         if (pb.PipeSettings.AutoBuild)
+        //         {
+        //             pb.BuildPipes();
+        //         }
+        //     }
+        // }
 
         public void RemoveNodeFromList(PipeNode remove)
         {
@@ -190,7 +192,6 @@ namespace eWolf.PipeBuilder
             _meshBuilder.Clear();
             if (!_pipes.Any())
             {
-                Debug.Log("Create Pipe: CreateSections ");
                 return;
             }
 
