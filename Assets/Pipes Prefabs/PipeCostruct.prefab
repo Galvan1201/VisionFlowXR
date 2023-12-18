@@ -95,6 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5848b95f08f536a4d8aadaffdcff3c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  editMode: 0
+  nodeEditMode: {fileID: 5258930261453003455, guid: df254232eca115a4eb4c8f3b90684195, type: 3}
   Pipe: {fileID: 3520447204242017454}
   currentPipeNode: {fileID: 0}
   pipeSettings:

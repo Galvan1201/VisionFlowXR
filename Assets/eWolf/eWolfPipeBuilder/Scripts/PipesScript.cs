@@ -1,22 +1,24 @@
 ﻿using System.Collections.Generic;
 using eWolf.PipeBuilder.Helpers;
 using UnityEngine;
-using UnityEditor;
-using Unity.VisualScripting;
 using eWolf.PipeBuilder.Data;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace eWolf.PipeBuilder.VisionFlowScripts
 {
     public class PipesScript : MonoBehaviour
     {
-
+        public bool editMode = false;
+        public GameObject nodeEditMode;
         private PipeNode _pipeNode;
         // Link to an pipe builder base so we will have all the setting we need.
         public PipeBase Pipe;
         public PipeNode currentPipeNode = null;
         public PipeSettings pipeSettings;
         public List<Vector3> nodesPositions;
+        public float radius;
 
         private void ClearAllPipes()
         {
@@ -43,6 +45,41 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         //     // return;
 
         // }
+
+    public void ToggleEditMode()
+    {
+        editMode = !editMode;
+        Debug.Log("EditMode toggled to: " + editMode);
+
+        foreach (Transform child in transform)
+        {
+            // Check if the child has already been instanced
+            if (child.childCount != 0)
+            {
+                // Child has already been instanced, toggle its visibility
+                GameObject childPrefab = child.GetChild(0).gameObject;
+                childPrefab.SetActive(editMode);
+                Debug.Log("Prefab visibility toggled to: " + editMode);
+            }
+        }
+    }
+
+    public void UpdateEditNodes()
+    {
+        foreach (Transform node in transform)
+        {
+            // Check if the child has already been instanced
+            if (node.childCount == 0)
+            {
+                // node hasn't been instanced, instantiate the prefab
+                GameObject instantiatedPrefab = Instantiate(nodeEditMode, node.position, node.rotation, node);
+                Debug.Log("Prefab instantiated at position: " + instantiatedPrefab.transform.position);
+                nodeEditMode.transform.localScale = new Vector3(radius * 2, radius * 2, radius * 2);
+                XRGrabInteractable grabInteractable = node.AddComponent<XRGrabInteractable>();
+                grabInteractable.attachTransform = instantiatedPrefab.transform;
+            }
+        }
+    }
 
         private void AddNode()
         {

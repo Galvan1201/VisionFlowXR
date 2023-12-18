@@ -9,6 +9,8 @@ using eWolf.PipeBuilder.VisionFlowScripts;
 using TMPro;
 using UnityEngine.XR.Interaction.Toolkit;
 using eWolf.PipeBuilder.Data;
+using Unity.XR.CoreUtils;
+using UnityEngine.EventSystems;
 
 
 public class NewPipeLogic : MonoBehaviour
@@ -16,7 +18,9 @@ public class NewPipeLogic : MonoBehaviour
     public GameObject settingsUI;
     public GameObject nodeHolo1;
     private GameObject firstNode;
+    private GameObject firstNodeAccept;
     private GameObject secondNode;
+    private GameObject secondNodeAccept;
 
     private XRGrabInteractable grabInteractable;
     public List<Vector3> nodePositions = new List<Vector3>();
@@ -24,7 +28,7 @@ public class NewPipeLogic : MonoBehaviour
     // pipeInUI to be placed references
     public GameObject pipeToPlace;
     private PipeSettings pipeToPlaceSettings;
-    private float radiusToSet = 10 / 1000;
+    private float radiusToSet;
     private bool flangeToSet = true;
     private Material materialToSet;
 
@@ -59,6 +63,7 @@ public class NewPipeLogic : MonoBehaviour
         UnityEngine.Debug.Log("StartTutorial");
         currentStep = PipeCreationSteps.Step1_NewPipeBttn;
         MainCamera = GameObject.Find("Main Camera").GetComponent<Transform>();
+        radiusToSet = 30f/1000f;
 
         // Set the position in front of the main camera
         float distanceFromCamera = 1f; // Adjust the distance as needed
@@ -90,31 +95,30 @@ public class NewPipeLogic : MonoBehaviour
         {
             // UnityEngine.Debug.Log(firstNode.GetComponentInChildren<Canvas>().enabled);
             //Show confirm
-            if (!grabInteractable.isSelected && !firstNode.GetComponentInChildren<Canvas>().enabled)
+            if (!grabInteractable.isSelected && !firstNodeAccept.activeSelf)
             {
-                firstNode.GetComponentInChildren<Canvas>().enabled = true;
+                firstNodeAccept.SetActive(true);
             }
 
             //if grabbed hide confirm 
-            if (grabInteractable.isSelected && firstNode.GetComponentInChildren<Canvas>().enabled)
-            {
-                firstNode.GetComponentInChildren<Canvas>().enabled = false;
+            if (grabInteractable.isSelected && firstNodeAccept.activeSelf)
+            {   
+                firstNodeAccept.SetActive(false);
             }
         }
 
         if (currentStep == PipeCreationSteps.Step6_ConfirmNode2)
         {
-            // UnityEngine.Debug.Log(firstNode.GetComponentInChildren<Canvas>().enabled);
             //Show confirm
-            if (!grabInteractable.isSelected && !secondNode.GetComponentInChildren<Canvas>().enabled)
+            if (!grabInteractable.isSelected && !secondNodeAccept.activeSelf)
             {
-                secondNode.GetComponentInChildren<Canvas>().enabled = true;
+                secondNodeAccept.SetActive(true);
             }
 
             //if grabbed hide confirm 
-            if (grabInteractable.isSelected && secondNode.GetComponentInChildren<Canvas>().enabled)
+            if (grabInteractable.isSelected && secondNodeAccept.activeSelf)
             {
-                secondNode.GetComponentInChildren<Canvas>().enabled = false;
+                secondNodeAccept.SetActive(false);
             }
         }
     }
@@ -157,6 +161,7 @@ public class NewPipeLogic : MonoBehaviour
                 menuHeader.SetText("Set the starting point of your pipe");
                 // Spawn the node
                 firstNode = Instantiate(nodeHolo1);
+                firstNodeAccept = firstNode.transform.Find("Accept").gameObject;
                 UnityEngine.Debug.Log(firstNode.transform.position);
                 firstNode.transform.SetParent(settingsUI.transform);
                 Vector3 newPosition = new Vector3(0, 2f, -0.836f); // Replace x, y, z with your desired coordinates;
@@ -170,23 +175,26 @@ public class NewPipeLogic : MonoBehaviour
             case PipeCreationSteps.Step4_GrabObject:
                 settingsUI.SetActive(false);
                 currentStep = PipeCreationSteps.Step5_ConfirmPosition;
-                firstNode.transform.Find("Canvas").Find("Accept").GetComponent<Button>().onClick.AddListener(PerformStep);
+                firstNodeAccept.GetComponent<Button>().onClick.AddListener(PerformStep);
+
                 // Wait for the user to grab and place the object
                 // You might use some input events or conditions to detect grabbing
                 break;
 
             case PipeCreationSteps.Step5_ConfirmPosition:
                 UnityEngine.Debug.Log("Position confirmed, hide canvas");
-                firstNode.GetComponentInChildren<Canvas>().enabled = false;
+                firstNodeAccept.SetActive(false);
                 firstNode.transform.parent = null;
                 grabInteractable.enabled = false;
                 // Store the position of the first node on the list
                 nodePositions.Add(firstNode.transform.position);
                 newPosition = new Vector3(0, 0.1f, 0.1f) + firstNode.transform.position; // Replace x, y, z with your desired coordinates;
                 secondNode = Instantiate(nodeHolo1, newPosition, Quaternion.identity);
-                secondNode.GetComponentInChildren<Canvas>().enabled = true;
+                grabInteractable = secondNode.GetComponent<XRGrabInteractable>();
+                secondNodeAccept = secondNode.transform.Find("Accept").gameObject;
+                secondNodeAccept.SetActive(true);
                 currentStep = PipeCreationSteps.Step6_ConfirmNode2;
-                secondNode.transform.Find("Canvas").Find("Accept").GetComponent<Button>().onClick.AddListener(PerformStep);
+                secondNodeAccept.GetComponent<Button>().onClick.AddListener(PerformStep);
                 break;
 
             case PipeCreationSteps.Step6_ConfirmNode2:
@@ -198,9 +206,11 @@ public class NewPipeLogic : MonoBehaviour
                 pipeToPlace = Instantiate(pipeToPlace);
                 pipeToPlaceSettings = pipeToPlace.GetComponent<PipeBase>().PipeSettings;
                 pipeToPlaceSettings.Radius = radiusToSet;
+                PipesScript pipeToPlaceScript = pipeToPlace.GetComponent<PipesScript>();
+                pipeToPlaceScript.radius = radiusToSet;
                 pipeToPlaceSettings.FlangeDetail.Flange = flangeToSet;
-                pipeToPlaceSettings.FlangeDetail.Size = radiusToSet/2;
-                pipeToPlaceSettings.FlangeDetail.Length = radiusToSet*2;
+                pipeToPlaceSettings.FlangeDetail.Size = radiusToSet / 2;
+                pipeToPlaceSettings.FlangeDetail.Length = radiusToSet * 2;
                 //Intervalo a 1 metro, cambiar.
                 pipeToPlaceSettings.FlangeDetail.Interval = 1;
                 if (materialToSet != null)
@@ -213,9 +223,10 @@ public class NewPipeLogic : MonoBehaviour
                     pipeToPlace.GetComponent<PipeBase>().Material = pipeInUI.Material; // replace defaultMaterial with the desired default material
                 }
                 //Sends the nodesList to the custom pipe builder
-                PipesScript pipesScript = pipeToPlace.GetComponent<PipesScript>();
-                pipesScript.nodesPositions = nodePositions;
-                pipesScript.CreateBasicPipeList();
+                pipeToPlaceScript.nodesPositions = nodePositions;
+                Debug.Log(radiusToSet);
+                pipeToPlaceScript.CreateBasicPipeList();
+                pipeToPlaceScript.UpdateEditNodes();
                 pipeToPlace.SetActive(true);
                 break;
 
