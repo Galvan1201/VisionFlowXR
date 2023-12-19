@@ -209,8 +209,11 @@ public class NewPipeLogic : MonoBehaviour
                 PipesScript pipeToPlaceScript = pipeToPlace.GetComponent<PipesScript>();
                 pipeToPlaceScript.radius = radiusToSet;
                 pipeToPlaceSettings.FlangeDetail.Flange = flangeToSet;
-                pipeToPlaceSettings.FlangeDetail.Size = radiusToSet / 2;
+                pipeToPlaceSettings.FlangeDetail.Size = radiusToSet / 3;
                 pipeToPlaceSettings.FlangeDetail.Length = radiusToSet * 2;
+                pipeToPlaceSettings.CornersDetail.Size = radiusToSet;
+                pipeToPlaceSettings.CornersDetail.Steps = 6;
+
                 //Intervalo a 1 metro, cambiar.
                 pipeToPlaceSettings.FlangeDetail.Interval = 1;
                 if (materialToSet != null)

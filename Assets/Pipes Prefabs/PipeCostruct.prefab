@@ -58,16 +58,16 @@ MonoBehaviour:
       Style: 1
     CornersDetail:
       Larger: 1
-      Size: 0.45
-      Steps: 5
+      Size: 0.03
+      Steps: 6
     FlangeDetail:
       Flange: 1
-      Interval: 2
-      Length: 0.32
-      Size: 0.02
+      Interval: 1
+      Length: 0.06
+      Size: 0.01
     InsidePipe: 0
     Radius: 0.03
-    Sides: 7
+    Sides: 15
     UVModifier: 1
 --- !u!114 &4314714710501556211
 MonoBehaviour:
@@ -107,8 +107,8 @@ MonoBehaviour:
       Style: 0
     CornersDetail:
       Larger: 0
-      Size: 0.45
-      Steps: 5
+      Size: 0.1
+      Steps: 3
     FlangeDetail:
       Flange: 0
       Interval: 1
@@ -116,8 +116,7 @@ MonoBehaviour:
       Size: 0.15
     InsidePipe: 0
     Radius: 2
-    Sides: 9
+    Sides: 15
     UVModifier: 1
   nodesPositions: []
   radius: 0
-  radiusSlider: {fileID: 0}

@@ -20,6 +20,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         public PipeSettings pipeSettings;
         public List<Vector3> nodesPositions;
         private List<Vector3> newNodesPositions; 
+        public List<PipeNode> selectedNodes;
         public float radius;
 
         private void ClearAllPipes()
@@ -75,8 +76,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 {
                     // node hasn't been instanced, instantiate the prefab
                     GameObject instantiatedPrefab = Instantiate(nodeEditMode, node.position, node.rotation, node);
-                    Debug.Log("Prefab instantiated at position: " + instantiatedPrefab.transform.position);
-                    nodeEditMode.transform.localScale = new Vector3(radius * 2, radius * 2, radius * 2);
+                    nodeEditMode.transform.localScale = new Vector3(radius * 2.2f, radius * 2.2f, radius * 2.2f);
                     XRGrabInteractable grabInteractable = node.AddComponent<XRGrabInteractable>();
                     grabInteractable.attachTransform = instantiatedPrefab.transform;
                     grabInteractable.useDynamicAttach = true;
@@ -102,13 +102,13 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             newNodesPositions.Clear();
         }
 
-        private void AddNode(PipeNode currentNode)
+        private void AddNode()
         {
-            if (currentNode.CanExtendPipes())
+            if (_pipeNode.CanExtendPipes())
             {
                 currentPipeNode = currentPipeNode.ExtendPipe().GetComponent<PipeNode>();
                 // GameObject child = originalGameObject.transform.GetChild(0).gameObject;
-                PipeBase pb = NodeHelper.GetPipeBase(currentNode.transform);
+                PipeBase pb = NodeHelper.GetPipeBase(_pipeNode.transform);
                 pb.BuildPipes();
                 Debug.Log("Selected object: " + pb); // Add this line to log the selected object
                 // return;

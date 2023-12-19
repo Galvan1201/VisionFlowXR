@@ -85,7 +85,7 @@ namespace eWolf.PipeBuilder
 
         public bool CanExtendPipes()
         {
-            return (_pipes.Count != 2);
+            return (_pipes.Count != 3);
         }
 
         public void ClearMesh()
@@ -130,10 +130,10 @@ namespace eWolf.PipeBuilder
             Vector3 newPipe = transform.position;
 
             if (_pipes.Count == 1)
-            {
+            {   
                 Vector3 direction = transform.position - _pipes[0].transform.position;
                 direction.Normalize();
-                newPipe += direction * 2;
+                newPipe += direction * 0.05f;
             }
             else
             {

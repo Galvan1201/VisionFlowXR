@@ -8,11 +8,13 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.UI;
 using UnityEngine.Animations;
 using eWolf.PipeBuilder.Helpers;
+using System;
 
 
 public class NodeEditModeLogic : MonoBehaviour
 {
     private PipeBase parentPipe;
+    private WristUI wristUI;
     private GameObject parentNodeObject;
     private PipeNode parentNodeScript;
     //Add logic variables
@@ -23,6 +25,13 @@ public class NodeEditModeLogic : MonoBehaviour
     private GameObject removeObject;
     private PipesScript pipesScript;
     private XRGrabInteractable grabInteractable;
+    [SerializeField] private Material deselectedMat;
+    [SerializeField] private Material selectedMat;
+    private new Renderer renderer;
+
+
+    //SelectLogicVariables
+    private Button selectNode;
 
     // Start is called before the first frame update
     void Start()
@@ -34,23 +43,69 @@ public class NodeEditModeLogic : MonoBehaviour
         removeObject = transform.Find("Editables").Find("Remove").gameObject;
         pipesScript = transform.parent.GetComponentInParent<PipesScript>();
         grabInteractable = transform.parent.GetComponent<XRGrabInteractable>();
+        renderer = gameObject.GetComponent<Renderer>();
 
-        addButton = addObject.GetComponent<Button>();
-        addButton.onClick.AddListener(AddNode);
+        wristUI = FindAnyObjectByType<WristUI>();
+        Debug.Log(wristUI);
+        addButton = wristUI.gameObject.transform.Find("Add Node").GetComponent<Button>();
+        // Debug.Log(addButton);
+        // addButton.onClick.AddListener(AddNode);
+
+        selectNode = gameObject.GetComponent<Button>();
+        selectNode.onClick.AddListener(SetSelectedNodes);
     }
 
-    private void AddNode()
+    public void AddNode()
     {
+        Debug.Log("Entra");
         if (parentNodeScript.CanExtendPipes())
         {
             newPipeNode = parentNodeScript.ExtendPipe().GetComponent<PipeNode>();
-            // GameObject child = originalGameObject.transform.GetChild(0).gameObject;
             parentPipe.SetAllModifed();
             parentPipe.BuildPipes();
             pipesScript.UpdateEditNodes();
             Debug.Log("Node Added: " + newPipeNode);
         }
     }
+
+    private void SetSelectedNodes()
+    {
+        if (pipesScript.selectedNodes.Contains(parentNodeScript))
+        {
+            pipesScript.selectedNodes.Remove(parentNodeScript);
+            //ADD WARNING NEW NODE ADDED
+            Debug.Log("Node Removed: " + parentNodeScript);
+            renderer.material = deselectedMat;
+        }
+        else
+        {
+            if (pipesScript.selectedNodes.Count < 2)
+            {
+                pipesScript.selectedNodes.Add(parentNodeScript);
+                //ADD WARNING NEW NODE REMOVED
+                Debug.Log("Node Added: " + parentNodeScript);
+                renderer.material = selectedMat;
+            }
+            else
+            {
+                //ADD WARNING
+                Debug.Log("Maximum nodes selected. Cannot add more.");
+            }
+        }
+        if (pipesScript.selectedNodes.Count == 0)
+        {
+            addButton.enabled = false;
+        }
+        if (pipesScript.selectedNodes.Count == 1)
+        {
+            addButton.enabled = true;
+        }
+        if (pipesScript.selectedNodes.Count == 2)
+        {
+            addButton.enabled = false;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

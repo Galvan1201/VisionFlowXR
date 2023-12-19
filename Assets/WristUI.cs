@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using eWolf.PipeBuilder;
+using eWolf.PipeBuilder.VisionFlowScripts;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -17,8 +19,6 @@ public class WristUI : MonoBehaviour
     public GameObject UI;
     private InputAction _menu;
 
-    private Button button;
-
     public Transform controller;
     // Start is called before the first frame update
     private void Start()
@@ -35,6 +35,24 @@ public class WristUI : MonoBehaviour
     public void PipeCreation()
     {   
         NewPipeLogic = Instantiate(NewPipeLogic);
+    }
+
+    public void AddNode()
+    {
+        List<PipeNode> nodesList = FindAnyObjectByType<PipesScript>().selectedNodes;
+        if(nodesList.Count != 1){
+            //ADD WARNING
+            Debug.Log("Mas de un nodo seleccionado");
+        }
+        if(nodesList.Count == 0){
+            //ADD WARNING
+            Debug.Log("Seleccione un nodo");
+        }
+        else
+        {
+            Debug.Log(nodesList[0]);
+            nodesList[0].GetComponentInChildren<NodeEditModeLogic>().AddNode();
+        }
     }
 
 
