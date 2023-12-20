@@ -18,7 +18,7 @@ namespace Wave.Essence.ScenePerception.Sample
 		[SerializeField] private GameObject anchorPrefab, anchorDisplayPrefab;
 
 		[SerializeField] private SpatialAnchorHelper _spatialAnchorHelper;
-		private ScenePerceptionMeshFacade _scenePerceptionMeshFacade;
+		public ScenePerceptionMeshFacade _scenePerceptionMeshFacade;
 		private bool hideMeshAndAnchors = false;
 
 		private RaycastHit leftControllerRaycastHitInfo = new RaycastHit();
@@ -90,7 +90,8 @@ namespace Wave.Essence.ScenePerception.Sample
 				logPanel.Clear();
 				logPanel.AddLog("ScenePerceptionDemo started.");
 			}
-			passThroughHelper.ShowPassthroughUnderlay(!Interop.WVR_IsPassthroughOverlayVisible());
+			// passThroughHelper.ShowPassthroughUnderlay(!Interop.WVR_IsPassthroughOverlayVisible());
+			passThroughHelper.ShowPassthroughUnderlay(true);
 		}
 
 		private void UpdateSceneAnchorModeText()

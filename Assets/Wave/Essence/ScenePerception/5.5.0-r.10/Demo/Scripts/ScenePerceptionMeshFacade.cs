@@ -8,7 +8,7 @@ namespace Wave.Essence.ScenePerception.Sample
 	{
 		private readonly ScenePerceptionHelper scenePerceptionHelper;
 		private readonly GeneratedPlaneContainer generatedPlaneContainer;
-		private readonly GeneratedSceneMeshContainer generatedSceneMeshContainer;
+		[SerializeField] private readonly GeneratedSceneMeshContainer generatedSceneMeshContainer;
 
 		private const string LOG_TAG = "ScenePerceptionMeshFacade";
 

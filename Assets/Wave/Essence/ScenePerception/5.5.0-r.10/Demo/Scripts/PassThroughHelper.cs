@@ -14,6 +14,7 @@ namespace Wave.Essence.ScenePerception.Sample
 
         
         private ScenePerceptionMeshFacade _scenePerceptionMeshFacade;
+        
 
         public void ShowPassthroughUnderlay(bool show)
         {
@@ -23,14 +24,13 @@ namespace Wave.Essence.ScenePerception.Sample
                 {
                     meshRender.material = DemoRoomMatTransparent;
                 }
-
+                _scenePerceptionMeshFacade = FindAnyObjectByType<ScenePerceptionDemo>()._scenePerceptionMeshFacade;
                 hmd.clearFlags = CameraClearFlags.SolidColor;
                 hmd.backgroundColor = new Color(0, 0, 0, 0);
                 Interop.WVR_ShowPassthroughUnderlay(true);
-                Interop.WVR_SetPassthroughImageQuality(WVR_PassthroughImageQuality.QualityMode);
-                
-                
+                Interop.WVR_SetPassthroughImageQuality(WVR_PassthroughImageQuality.PerformanceMode);
                 _scenePerceptionMeshFacade.SetVisibility(false);
+                Debug.Log(RoomPanelMeshRenderers);
         }
 
         public void HidePassthroughUnderlay()

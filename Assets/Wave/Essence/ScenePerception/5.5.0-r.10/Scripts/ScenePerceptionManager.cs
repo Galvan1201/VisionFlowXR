@@ -556,7 +556,7 @@ namespace Wave.Essence.ScenePerception
 
 			planeMeshFilter.mesh = planeMesh;
 			planeMeshRenderer.material = meshMaterial;
-			
+
 			if (attachMeshCollider)
 			{
 				planeMeshGameObject.AddComponent<MeshCollider>();
@@ -604,8 +604,16 @@ namespace Wave.Essence.ScenePerception
 			if (attachMeshCollider)
 			{
 				sceneMeshGameObject.AddComponent<MeshCollider>();
-			}
+				// MeshCollider meshCollider = sceneMeshGameObject.AddComponent<MeshCollider>();
+				// meshCollider.convex = true; // Adjust based on the shape of your mesh
 
+				// // Set the layer to "IgnoreRaycast"
+				// sceneMeshGameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+
+				// // Add a Rigidbody component to enable collisions
+				// Rigidbody rigidbody = sceneMeshGameObject.AddComponent<Rigidbody>();
+				// // rigidbody.isKinematic = true; // Set to true if you don't want physics interactions
+			}
 			return sceneMeshGameObject;
 		}
 
@@ -1077,7 +1085,8 @@ namespace Wave.Essence.ScenePerception
 			}
 			else
 			{
-				if (logCached) {
+				if (logCached)
+				{
 					Log.v(LOG_TAG, "WVR_EnumerateCachedSpatialAnchorNames successful.");
 					if (cachedSpatialAnchorNames != null && cachedSpatialAnchorNames.Length > 0)
 						foreach (var name in cachedSpatialAnchorNames)
@@ -1342,7 +1351,7 @@ namespace Wave.Essence.ScenePerception
 					}
 				}
 			}
-			return result; 
+			return result;
 		}
 
 		public WVR_Result ImportPersistedSpatialAnchor(byte[] data)
@@ -1553,7 +1562,7 @@ namespace Wave.Essence.ScenePerception
 			if (subsystem != null)
 			{
 				TrackingOriginModeFlags trackingOriginMode = subsystem.GetTrackingOriginMode();
-				
+
 
 				bool getOriginSuccess = ClientInterface.GetOrigin(trackingOriginMode, ref currentPoseOriginModel);
 
@@ -1623,7 +1632,7 @@ namespace Wave.Essence.ScenePerception
 				}
 
 				Vector3[] vertexBufferUnity = new Vector3[vertexBuffer.Length];
-				for (int i=0; i<vertexBuffer.Length; i++)
+				for (int i = 0; i < vertexBuffer.Length; i++)
 				{
 					Coordinate.GetVectorFromGL(vertexBuffer[i], out vertexBufferUnity[i]);
 				}
@@ -1639,11 +1648,11 @@ namespace Wave.Essence.ScenePerception
 					}
 					else if (indexMod3 == 1)
 					{
-						indexBufferUnity[i] = (int)indexBuffer[i+1];
+						indexBufferUnity[i] = (int)indexBuffer[i + 1];
 					}
 					else if (indexMod3 == 2)
 					{
-						indexBufferUnity[i] = (int)indexBuffer[i-1];
+						indexBufferUnity[i] = (int)indexBuffer[i - 1];
 					}
 				}
 
