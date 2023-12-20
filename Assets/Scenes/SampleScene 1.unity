@@ -8891,10 +8891,6 @@ PrefabInstance:
       propertyPath: controller
       value: 
       objectReference: {fileID: 1270922046}
-    - target: {fileID: 6749464774340433533, guid: a8d62ceb8fc6ffc44be07036c357af27, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: AddNode
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

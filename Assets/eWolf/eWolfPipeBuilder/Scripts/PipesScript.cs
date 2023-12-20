@@ -76,7 +76,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 {
                     // node hasn't been instanced, instantiate the prefab
                     GameObject instantiatedPrefab = Instantiate(nodeEditMode, node.position, node.rotation, node);
-                    nodeEditMode.transform.localScale = new Vector3(radius * 2.2f, radius * 2.2f, radius * 2.2f);
+                    nodeEditMode.transform.localScale = new Vector3(radius * 2.5f, radius * 2.5f, radius * 2.5f);
                     XRGrabInteractable grabInteractable = node.AddComponent<XRGrabInteractable>();
                     grabInteractable.attachTransform = instantiatedPrefab.transform;
                     grabInteractable.useDynamicAttach = true;
@@ -187,7 +187,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 }
                 currentPipeNode.transform.position = pos;
             }
-            Destroy(transform.GetChild(0).gameObject);
+            // Destroy(transform.GetChild(0).gameObject);
             Pipe.SetAllModifed();
             Pipe.BuildPipes();
         }

@@ -51,9 +51,9 @@ public class NodeEditModeLogic : MonoBehaviour
         // Debug.Log(addButton);
         // addButton.onClick.AddListener(AddNode);
 
-        selectNode = gameObject.GetComponent<Button>();
+        selectNode = gameObject.GetComponentInChildren<Button>();
         selectNode.onClick.AddListener(SetSelectedNodes);
-    }
+    }   
 
     public void AddNode()
     {
@@ -68,7 +68,7 @@ public class NodeEditModeLogic : MonoBehaviour
         }
     }
 
-    private void SetSelectedNodes()
+    public void SetSelectedNodes()
     {
         if (pipesScript.selectedNodes.Contains(parentNodeScript))
         {

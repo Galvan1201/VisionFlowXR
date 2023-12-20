@@ -45,14 +45,17 @@ public class WristUI : MonoBehaviour
             Debug.Log("Mas de un nodo seleccionado");
         }
         if(nodesList.Count == 0){
-            //ADD WARNING
+            //ADD WARNING (VALIDATION CHANGED TO NODE EDIT MODE LOGIC)
             Debug.Log("Seleccione un nodo");
         }
         else
         {
+            // Adds a node next to the selected node
             Debug.Log(nodesList[0]);
             nodesList[0].GetComponentInChildren<NodeEditModeLogic>().AddNode();
         }
+        // Deselects node after adding
+        nodesList[0].GetComponentInChildren<NodeEditModeLogic>().SetSelectedNodes();
     }
 
 

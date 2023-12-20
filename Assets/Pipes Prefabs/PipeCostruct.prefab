@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editMode: 0
-  nodeEditMode: {fileID: 5258930261453003455, guid: df254232eca115a4eb4c8f3b90684195, type: 3}
+  nodeEditMode: {fileID: 5258930261453003455, guid: b89650231ec62fc47beeec646327ec7a, type: 3}
   Pipe: {fileID: 3520447204242017454}
   currentPipeNode: {fileID: 0}
   pipeSettings:
@@ -119,4 +119,5 @@ MonoBehaviour:
     Sides: 15
     UVModifier: 1
   nodesPositions: []
+  selectedNodes: []
   radius: 0
