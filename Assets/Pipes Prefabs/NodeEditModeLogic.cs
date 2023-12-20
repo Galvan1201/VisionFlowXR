@@ -23,10 +23,14 @@ public class NodeEditModeLogic : MonoBehaviour
     private PipeNode newPipeNode;
     //Remove logic variables
     private GameObject removeObject;
+    private Button deleteButton;
+
+    // Split or create section logic
+    private Button splitButton;
     private PipesScript pipesScript;
     private XRGrabInteractable grabInteractable;
-    [SerializeField] private Material deselectedMat;
-    [SerializeField] private Material selectedMat;
+    [SerializeField] public Material deselectedMat;
+    [SerializeField] public Material selectedMat;
     private new Renderer renderer;
 
 
@@ -48,16 +52,17 @@ public class NodeEditModeLogic : MonoBehaviour
         wristUI = FindAnyObjectByType<WristUI>();
         Debug.Log(wristUI);
         addButton = wristUI.gameObject.transform.Find("Add Node").GetComponent<Button>();
+        splitButton = wristUI.gameObject.transform.Find("Split Node").GetComponent<Button>();
+        deleteButton = wristUI.gameObject.transform.Find("Delete Node").GetComponent<Button>();
         // Debug.Log(addButton);
         // addButton.onClick.AddListener(AddNode);
 
         selectNode = gameObject.GetComponentInChildren<Button>();
         selectNode.onClick.AddListener(SetSelectedNodes);
-    }   
+    }
 
     public void AddNode()
     {
-        Debug.Log("Entra");
         if (parentNodeScript.CanExtendPipes())
         {
             newPipeNode = parentNodeScript.ExtendPipe().GetComponent<PipeNode>();
@@ -95,14 +100,20 @@ public class NodeEditModeLogic : MonoBehaviour
         if (pipesScript.selectedNodes.Count == 0)
         {
             addButton.enabled = false;
+            splitButton.enabled = false;
+            deleteButton.enabled = false;
         }
         if (pipesScript.selectedNodes.Count == 1)
         {
             addButton.enabled = true;
+            splitButton.enabled = false;
+            deleteButton.enabled = true;
         }
         if (pipesScript.selectedNodes.Count == 2)
         {
             addButton.enabled = false;
+            splitButton.enabled = true;
+            deleteButton.enabled = false;
         }
     }
 

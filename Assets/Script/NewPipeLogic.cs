@@ -227,9 +227,7 @@ public class NewPipeLogic : MonoBehaviour
                 }
                 //Sends the nodesList to the custom pipe builder
                 pipeToPlaceScript.nodesPositions = nodePositions;
-                Debug.Log(radiusToSet);
-                pipeToPlaceScript.CreateBasicPipeList();
-                pipeToPlaceScript.UpdateEditNodes();
+                pipeToPlaceScript.CreateInitialPipeFromList();
                 pipeToPlace.SetActive(true);
                 break;
 

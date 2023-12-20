@@ -195,9 +195,9 @@ namespace eWolf.PipeBuilder
                 return;
             }
 
-            if (_pipes.Count == 2)
+            // ANTES _pipes.Count = 2
+            if (_pipes.Count > 1)
             {
-                Debug.Log("Create section");
                 PipeBuilderCorner pipeBuilderCorner = new PipeBuilderCorner(_meshBuilder, pipeBase)
                 {
                     StartOffSet = pipeBase.PipeSettings.CornersDetail.Size

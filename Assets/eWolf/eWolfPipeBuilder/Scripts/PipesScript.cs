@@ -5,7 +5,6 @@ using eWolf.PipeBuilder.Data;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using UnityEngine.XR.Interaction.Toolkit;
-using System.Runtime.CompilerServices;
 
 namespace eWolf.PipeBuilder.VisionFlowScripts
 {
@@ -19,34 +18,16 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         public PipeNode currentPipeNode = null;
         public PipeSettings pipeSettings;
         public List<Vector3> nodesPositions;
-        private List<Vector3> newNodesPositions; 
+        private List<Vector3> newNodesPositions;
         public List<PipeNode> selectedNodes;
         public float radius;
 
-        private void ClearAllPipes()
-        {
-            foreach (Transform child in Pipe.transform)
-            {
-                GameObject.Destroy(child.gameObject);
-            }
-        }
-
-        // private void CreateBasicPipe()
+        // private void ClearAllPipes()
         // {
-        //     GameObject go = Pipe.AddPipes();
-        //     PipeNode pipeNode = go.GetComponent<PipeNode>();
-        //     GameObject extendPipe = pipeNode.ExtendPipe();
-        //     Pipe.BuildPipes();
-        // }
-
-        // private void CreateBasicPipe()
-        // {
-        //     currentPipeNode = Pipe.AddPipes().GetComponent<PipeNode>();
-        //     PipeNode pn = obj.GetComponent<PipeNode>();
-        //     Selection.objects = new GameObject[] { pn.ExtendPipe() };
-        //     Debug.Log("Selected object: " + pn); // Add this line to log the selected object
-        //     // return;
-
+        //     foreach (Transform child in Pipe.transform)
+        //     {
+        //         GameObject.Destroy(child.gameObject);
+        //     }
         // }
 
         public void ToggleEditMode()
@@ -67,8 +48,12 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             }
         }
 
+        // Regenerates the spheres placed on the nodes, updates the nodes list and deselects all nodes.
         public void UpdateEditNodes()
         {
+            // Deselects all nodes
+            selectedNodes.Clear();
+            nodesPositions.Clear();
             foreach (Transform node in transform)
             {
                 // Check if the child has already been instanced
@@ -88,71 +73,86 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                     nodeRigidbody.useGravity = false;
                     nodeRigidbody.isKinematic = true;
                 }
+                else
+                {
+                    //Changes node sphere material to deselected
+                    NodeEditModeLogic nodeEditMode = node.GetComponentInChildren<NodeEditModeLogic>();
+                    nodeEditMode.gameObject.GetComponent<Renderer>().material = nodeEditMode.deselectedMat;
+                }
+                nodesPositions.Add(node.position);
             }
         }
         // Call this function when rebuilding the pipe is necessary
-        public void UpdateNodesList()
-        {
-            foreach (Transform node in transform)
-            {
-                // insert the node position into the list
-                newNodesPositions.Add(node.position);
-            }
-            nodesPositions = newNodesPositions;
-            newNodesPositions.Clear();
-        }
+        // public void UpdateNodesList()
+        // {
+        //     foreach (Transform node in transform)
+        //     {
+        //         // insert the node position into the list
+        //         newNodesPositions.Add(node.position);
+        //     }
+        //     nodesPositions = newNodesPositions;
+        //     newNodesPositions.Clear();
+        // }
 
-        private void AddNode()
+        //Inserts a node between two nodes, no matter if they are connected or not
+        public void InsertNodeInBetween()
         {
-            if (_pipeNode.CanExtendPipes())
+            if (selectedNodes.Count == 2)
             {
-                currentPipeNode = currentPipeNode.ExtendPipe().GetComponent<PipeNode>();
-                // GameObject child = originalGameObject.transform.GetChild(0).gameObject;
-                PipeBase pb = NodeHelper.GetPipeBase(_pipeNode.transform);
-                pb.BuildPipes();
-                Debug.Log("Selected object: " + pb); // Add this line to log the selected object
-                // return;
-            }
-        }
-
-        public void CreateOrExtendPipe()
-        {
-            GameObject parentObject = GameObject.Find("PipeBase_pf");
-            Debug.Log(parentObject.transform.childCount);
-
-            if (parentObject.transform.childCount == 0)
-            {
-                // Parent object doesn't exist, create a new pipe.
-                Debug.Log("Creating a new pipe.");
-                GameObject go = Pipe.AddPipes();
-                PipeNode pipeNode = go.GetComponent<PipeNode>();
-                GameObject extendPipe = pipeNode.ExtendPipe();
+                Pipe.InsertNode(selectedNodes);
                 Pipe.SetAllModifed();
                 Pipe.BuildPipes();
-            }
-            else
-            {
-                // Parent object exists, extend the existing pipe.
-                Debug.Log("Extending the existing pipe.");
-                int childCount = parentObject.transform.childCount;
-                Debug.Log("");
-                if (childCount > 0)
-                {
-                    PipeNode[] pipeNodes = parentObject.GetComponentsInChildren<PipeNode>();
-                    _pipeNode = pipeNodes[pipeNodes.Length - 1];
-                    Debug.Log(_pipeNode);
-                    _pipeNode.ExtendPipe();
-                    Pipe.SetAllModifed();
-                    Pipe.BuildPipes();
-                    // lastChild = lastChild.ExtendPipe().GetComponent<PipeNode>();
-                    // Your logic for extending the existing pipe goes here.
-                }
-                else
-                {
-                    Debug.Log("No children found.");
-                }
+                UpdateEditNodes();
             }
         }
+
+        public void DeleteNode()
+        {
+            Pipe.RemoveNode(selectedNodes[0]);
+            DestroyImmediate(selectedNodes[0].gameObject);
+            Pipe.SetAllModifed();
+            Pipe.BuildPipes();
+            UpdateEditNodes();
+        }
+
+        // public void CreateOrExtendPipe()
+        // {
+        //     GameObject parentObject = GameObject.Find("PipeBase_pf");
+        //     Debug.Log(parentObject.transform.childCount);
+
+        //     if (parentObject.transform.childCount == 0)
+        //     {
+        //         // Parent object doesn't exist, create a new pipe.
+        //         Debug.Log("Creating a new pipe.");
+        //         GameObject go = Pipe.AddPipes();
+        //         PipeNode pipeNode = go.GetComponent<PipeNode>();
+        //         GameObject extendPipe = pipeNode.ExtendPipe();
+        //         Pipe.SetAllModifed();
+        //         Pipe.BuildPipes();
+        //     }
+        //     else
+        //     {
+        //         // Parent object exists, extend the existing pipe.
+        //         Debug.Log("Extending the existing pipe.");
+        //         int childCount = parentObject.transform.childCount;
+        //         Debug.Log("");
+        //         if (childCount > 0)
+        //         {
+        //             PipeNode[] pipeNodes = parentObject.GetComponentsInChildren<PipeNode>();
+        //             _pipeNode = pipeNodes[pipeNodes.Length - 1];
+        //             Debug.Log(_pipeNode);
+        //             _pipeNode.ExtendPipe();
+        //             Pipe.SetAllModifed();
+        //             Pipe.BuildPipes();
+        //             // lastChild = lastChild.ExtendPipe().GetComponent<PipeNode>();
+        //             // Your logic for extending the existing pipe goes here.
+        //         }
+        //         else
+        //         {
+        //             Debug.Log("No children found.");
+        //         }
+        //     }
+        // }
         // public Slider radiusSlider;
         // public void ChangeRadiusOnMenu()
         // {
@@ -161,16 +161,10 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         //     Pipe.BuildPipes();
         // }
 
-        public void CreateBasicPipeList()
-        {
-            // List<Vector3> positions = new List<Vector3>();
-            // positions.Add(new Vector3(0, 0, 0));
-            // positions.Add(new Vector3(4, 0, 0));
-            // positions.Add(new Vector3(4, 0, 4));
-            // positions.Add(new Vector3(0, 0, 4));
-            // positions.Add(new Vector3(0, -4, 4));
-            // positions.Add(new Vector3(0, -4, 0));
 
+        //Called when need of create an intial pipe from a list
+        public void CreateInitialPipeFromList()
+        {
             GameObject go = Pipe.AddPipes();
             bool first = true;
             PipeNode currentPipeNode = null;
@@ -187,9 +181,10 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 }
                 currentPipeNode.transform.position = pos;
             }
-            // Destroy(transform.GetChild(0).gameObject);
+            Destroy(transform.GetChild(0).gameObject);
             Pipe.SetAllModifed();
             Pipe.BuildPipes();
+            UpdateEditNodes();
         }
 
         private void Update()
@@ -197,23 +192,23 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             // Pipe.BuildPipes();
         }
 
-        private void OnGUI()
-        {
-            int y = 10;
-            if (GUI.Button(new Rect(10, y, 250, 45), "Create or Extend Pipe"))
-            {
-                CreateOrExtendPipe();
-            }
-            y += 50;
-            if (GUI.Button(new Rect(10, y, 250, 45), "Clear Pipes"))
-            {
-                ClearAllPipes();
-            }
-            y += 50;
-            if (GUI.Button(new Rect(10, y, 250, 45), "Create pipes from list"))
-            {
-                CreateBasicPipeList();
-            }
-        }
+        // private void OnGUI()
+        // {
+        //     int y = 10;
+        //     if (GUI.Button(new Rect(10, y, 250, 45), "Create or Extend Pipe"))
+        //     {
+        //         CreateOrExtendPipe();
+        //     }
+        //     y += 50;
+        //     if (GUI.Button(new Rect(10, y, 250, 45), "Clear Pipes"))
+        //     {
+        //         ClearAllPipes();
+        //     }
+        //     y += 50;
+        //     if (GUI.Button(new Rect(10, y, 250, 45), "Create pipes from list"))
+        //     {
+        //         CreateBasicPipeList();
+        //     }
+        // }
     }
 }

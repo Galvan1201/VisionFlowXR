@@ -39,6 +39,7 @@ public class WristUI : MonoBehaviour
 
     public void AddNode()
     {
+        // Cambiar por pipe en edicion activa
         List<PipeNode> nodesList = FindAnyObjectByType<PipesScript>().selectedNodes;
         if(nodesList.Count != 1){
             //ADD WARNING
@@ -54,10 +55,19 @@ public class WristUI : MonoBehaviour
             Debug.Log(nodesList[0]);
             nodesList[0].GetComponentInChildren<NodeEditModeLogic>().AddNode();
         }
-        // Deselects node after adding
-        nodesList[0].GetComponentInChildren<NodeEditModeLogic>().SetSelectedNodes();
+        // // Deselects node after adding
+        // nodesList[0].GetComponentInChildren<NodeEditModeLogic>().SetSelectedNodes();
     }
 
+    public void AddNodeBetween()
+    {
+        FindAnyObjectByType<PipesScript>().InsertNodeInBetween();
+    }
+
+    public void DeleteNode()
+    {
+        FindAnyObjectByType<PipesScript>().DeleteNode();
+    }
 
     // Update is called once per frame
     private void OnDestroy()
