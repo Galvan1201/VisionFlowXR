@@ -25,6 +25,9 @@ public class NewPipeLogic : MonoBehaviour
     private XRGrabInteractable grabInteractable;
     public List<Vector3> nodePositions = new List<Vector3>();
 
+    private WristUI wristUI;
+    private Button newpipeButton;
+
     // pipeInUI to be placed references
     public GameObject pipeToPlace;
     private PipeSettings pipeToPlaceSettings;
@@ -73,6 +76,9 @@ public class NewPipeLogic : MonoBehaviour
         Quaternion newRotation = Quaternion.LookRotation(new Vector3(MainCamera.forward.x, 0, MainCamera.forward.z));
         // Instantiate the UI with the calculated position and rotation
         settingsUI = Instantiate(settingsUI, newPosition, newRotation);
+        wristUI = FindAnyObjectByType<WristUI>();
+        newpipeButton = wristUI.gameObject.transform.Find("Place Pipe").GetComponent<Button>();
+        newpipeButton.enabled = false;
 
         //Find menu content and UIPipe
         content = settingsUI.transform.Find("NewPipeCreatorMenu").Find("Content");
@@ -125,7 +131,7 @@ public class NewPipeLogic : MonoBehaviour
 
     public void OnDisable()
     {
-        settingsUI.SetActive(false);
+        // settingsUI.SetActive(false);
     }
 
     public void PerformStep()
@@ -173,7 +179,7 @@ public class NewPipeLogic : MonoBehaviour
                 break;
 
             case PipeCreationSteps.Step4_GrabObject:
-                settingsUI.SetActive(false);
+                Destroy(settingsUI);
                 currentStep = PipeCreationSteps.Step5_ConfirmPosition;
                 firstNodeAccept.GetComponent<Button>().onClick.AddListener(PerformStep);
 
@@ -229,6 +235,8 @@ public class NewPipeLogic : MonoBehaviour
                 pipeToPlaceScript.nodesPositions = nodePositions;
                 pipeToPlaceScript.CreateInitialPipeFromList();
                 pipeToPlace.SetActive(true);
+                newpipeButton.enabled = true;
+                Destroy(gameObject);
                 break;
 
             // Add more steps as needed
