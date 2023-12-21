@@ -9,6 +9,8 @@ using UnityEngine.UI;
 using UnityEngine.Animations;
 using eWolf.PipeBuilder.Helpers;
 using System;
+using UnityEngine.Rendering;
+using eWolf.PipeBuilder.Data;
 
 
 public class NodeEditModeLogic : MonoBehaviour
@@ -17,6 +19,7 @@ public class NodeEditModeLogic : MonoBehaviour
     private WristUI wristUI;
     private GameObject parentNodeObject;
     private PipeNode parentNodeScript;
+    private Material originalMaterial;
     //Add logic variables
     private GameObject addObject;
     private Button addButton;
@@ -59,6 +62,7 @@ public class NodeEditModeLogic : MonoBehaviour
 
         selectNode = gameObject.GetComponentInChildren<Button>();
         selectNode.onClick.AddListener(SetSelectedNodes);
+        originalMaterial = parentPipe.Material;
     }
 
     public void AddNode()
@@ -117,11 +121,45 @@ public class NodeEditModeLogic : MonoBehaviour
         }
     }
 
+    //Change if necessary
+    private float collisionRadius = 0.2f;
+    void CheckForCollision()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, collisionRadius);
+        bool isColliding = false;
+
+        foreach (Collider hitCollider in hitColliders)
+        {
+            Debug.Log(hitCollider);
+            if (hitCollider.gameObject.layer == 2)
+            {
+                isColliding = true;
+                // break; // Exit the loop early if a collision is found
+            }
+        }
+        if (isColliding)
+        {
+            if (parentPipe.Material = originalMaterial)
+            {
+                parentPipe.Material = parentPipe.collisionMaterial;
+            }
+        }
+        else
+        {
+            if (parentPipe.Material = parentPipe.collisionMaterial)
+            {
+                parentPipe.Material = originalMaterial;
+            }
+        }
+    }
+
+
     // Update is called once per frame
     void Update()
     {
         if (grabInteractable.isSelected)
-        {
+        {   
+            CheckForCollision();
             parentPipe.SetAllModifed();
             parentPipe.BuildPipes();
         }

@@ -12,6 +12,7 @@ namespace eWolf.PipeBuilder
     public class PipeBase : MonoBehaviour, IFixAsset
     {
         public Material Material;
+        public Material collisionMaterial;
         public Material MaterialOther;
         public PipeSettings PipeSettings = new PipeSettings();
 

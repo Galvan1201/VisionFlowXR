@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 3520447204242017454}
   - component: {fileID: 4314714710501556211}
   - component: {fileID: 5983743696054913091}
-  - component: {fileID: 7513939696121068834}
-  - component: {fileID: 1161385237747282835}
   m_Layer: 0
   m_Name: PipeCostruct
   m_TagString: Untagged
@@ -49,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Material: {fileID: 2100000, guid: ab569b848630ffc4480ce8d0e607921a, type: 2}
+  collisionMaterial: {fileID: 2100000, guid: f2830af80c5ff224aa28e506d21cb9cd, type: 2}
   MaterialOther: {fileID: 0}
   PipeSettings:
     AutoBuild: 1
@@ -123,43 +122,3 @@ MonoBehaviour:
   nodesPositions: []
   selectedNodes: []
   radius: 0
---- !u!54 &7513939696121068834
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8984254354758505195}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 4
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 1073742067
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 2
---- !u!114 &1161385237747282835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8984254354758505195}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7175c85b6c6803c43873498f2438dcf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newColorMaterial: {fileID: 2100000, guid: cddb471e6547e60479172832501a77c6, type: 2}
