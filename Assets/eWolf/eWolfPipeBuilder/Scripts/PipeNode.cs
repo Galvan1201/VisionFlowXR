@@ -138,7 +138,6 @@ namespace eWolf.PipeBuilder
             else
             {
                 //Seteo de longitud
-                Debug.Log(pb.PipeSettings.Radius);
                 newPipe.x += pb.PipeSettings.Radius*0.5f;
             }
 

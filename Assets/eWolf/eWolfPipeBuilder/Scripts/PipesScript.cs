@@ -10,7 +10,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
 {
     public class PipesScript : MonoBehaviour
     {
-        public bool editMode = true;
+        public bool isEditing = true;
         public GameObject nodeEditMode;
         private PipeNode _pipeNode;
         // Link to an pipe builder base so we will have all the setting we need.
@@ -21,6 +21,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         private List<Vector3> newNodesPositions;
         public List<PipeNode> selectedNodes;
         public float radius;
+        public GlobalVariables globalVariables;
 
         // private void ClearAllPipes()
         // {
@@ -30,9 +31,9 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         //     }
         // }
 
-        public void ToggleEditMode()
+
+        public void ToggleEditMode(bool editMode)
         {
-            editMode = !editMode;
             Debug.Log("EditMode toggled to: " + editMode);
 
             foreach (Transform child in transform)
@@ -46,6 +47,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                     Debug.Log("Prefab visibility toggled to: " + editMode);
                 }
             }
+            isEditing = !editMode;
         }
 
         // Regenerates the spheres placed on the nodes, updates the nodes list and deselects all nodes.
@@ -93,6 +95,17 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         //     nodesPositions = newNodesPositions;
         //     newNodesPositions.Clear();
         // }
+
+        public void AddNode()
+        {
+            if (selectedNodes[0].CanExtendPipes())
+            {
+                selectedNodes[0].ExtendPipe().GetComponent<PipeNode>();
+                Pipe.SetAllModifed();
+                Pipe.BuildPipes();
+                UpdateEditNodes();
+            }
+        }
 
         //Inserts a node between two nodes, no matter if they are connected or not
         public void InsertNodeInBetween()
@@ -185,6 +198,8 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             Pipe.SetAllModifed();
             Pipe.BuildPipes();
             UpdateEditNodes();
+            globalVariables = GameObject.Find("GlobalVariables").GetComponent<GlobalVariables>();
+            globalVariables.pipeBeingEdited = gameObject;
         }
 
         private void Update()

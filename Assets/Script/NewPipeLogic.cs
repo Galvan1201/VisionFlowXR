@@ -130,9 +130,30 @@ public class NewPipeLogic : MonoBehaviour
         }
     }
 
-    public void OnDisable()
+    private void OnDestroy()
     {
-        // settingsUI.SetActive(false);
+        // Unsubscribe from all listeners to prevent memory leaks
+        if (slider != null)
+        {
+            slider.onValueChanged.RemoveListener(ChangeRadiusOnMenu);
+        }
+
+        if (toggle != null)
+        {
+            toggle.onValueChanged.RemoveListener(ToggleFlangesOnMenu);
+        }
+
+        if (firstNodeAccept != null)
+        {
+            firstNodeAccept.GetComponent<Button>().onClick.RemoveListener(PerformStep);
+        }
+
+        if (secondNodeAccept != null)
+        {
+            secondNodeAccept.GetComponent<Button>().onClick.RemoveListener(PerformStep);
+        }
+
+        // Add additional cleanup for other listeners if needed
     }
 
     public void PerformStep()
@@ -141,7 +162,7 @@ public class NewPipeLogic : MonoBehaviour
         switch (currentStep)
         {
             case PipeCreationSteps.Step1_NewPipeBttn:
-                UnityEngine.Debug.Log("Step 1: OpenCanvas");
+                // UnityEngine.Debug.Log("Step 1: OpenCanvas");
                 settingsUI.SetActive(true);
 
                 //Add listeners of Sliders and toggles
@@ -155,8 +176,8 @@ public class NewPipeLogic : MonoBehaviour
                 break;
 
             case PipeCreationSteps.Step2_SetSettings:
-                UnityEngine.Debug.Log(currentStep);
-                UnityEngine.Debug.Log("Save pipe settings and instansiate prefab");
+                // UnityEngine.Debug.Log(currentStep);
+                // UnityEngine.Debug.Log("Save pipe settings and instansiate prefab");
                 content.gameObject.SetActive(false);
                 pipeInUI.gameObject.SetActive(false);
                 currentStep = PipeCreationSteps.Step3_ReadyToPlace;
@@ -169,13 +190,13 @@ public class NewPipeLogic : MonoBehaviour
                 // Spawn the node
                 firstNode = Instantiate(nodeHolo1);
                 firstNodeAccept = firstNode.transform.Find("Accept").gameObject;
-                UnityEngine.Debug.Log(firstNode.transform.position);
+                // UnityEngine.Debug.Log(firstNode.transform.position);
                 firstNode.transform.SetParent(settingsUI.transform);
                 Vector3 newPosition = new Vector3(0, 2f, -0.836f); // Replace x, y, z with your desired coordinates;
                 firstNode.transform.localPosition = newPosition;
-                UnityEngine.Debug.Log(firstNode.transform.position);
+                // UnityEngine.Debug.Log(firstNode.transform.position);
                 grabInteractable = firstNode.GetComponent<XRGrabInteractable>();
-                UnityEngine.Debug.Log("Waiting for grab, step4");
+                // UnityEngine.Debug.Log("Waiting for grab, step4");
                 currentStep = PipeCreationSteps.Step4_GrabObject;
                 break;
 
@@ -189,7 +210,7 @@ public class NewPipeLogic : MonoBehaviour
                 break;
 
             case PipeCreationSteps.Step5_ConfirmPosition:
-                UnityEngine.Debug.Log("Position confirmed, hide canvas");
+                // UnityEngine.Debug.Log("Position confirmed, hide canvas");
                 firstNodeAccept.SetActive(false);
                 firstNode.transform.parent = null;
                 grabInteractable.enabled = false;
@@ -235,6 +256,7 @@ public class NewPipeLogic : MonoBehaviour
                 //Sends the nodesList to the custom pipe builder
                 pipeToPlaceScript.nodesPositions = nodePositions;
                 pipeToPlaceScript.CreateInitialPipeFromList();
+                pipeToPlace.transform.SetParent(GameObject.Find("Pipes").transform);
                 pipeToPlace.SetActive(true);
                 newpipeButton.enabled = true;
                 Destroy(gameObject);

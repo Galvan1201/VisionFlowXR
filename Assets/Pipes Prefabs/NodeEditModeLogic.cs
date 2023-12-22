@@ -53,7 +53,6 @@ public class NodeEditModeLogic : MonoBehaviour
         renderer = gameObject.GetComponent<Renderer>();
 
         wristUI = FindAnyObjectByType<WristUI>();
-        Debug.Log(wristUI);
         addButton = wristUI.gameObject.transform.Find("Add Node").GetComponent<Button>();
         splitButton = wristUI.gameObject.transform.Find("Split Node").GetComponent<Button>();
         deleteButton = wristUI.gameObject.transform.Find("Delete Node").GetComponent<Button>();
@@ -65,17 +64,17 @@ public class NodeEditModeLogic : MonoBehaviour
         originalMaterial = parentPipe.Material;
     }
 
-    public void AddNode()
-    {
-        if (parentNodeScript.CanExtendPipes())
-        {
-            newPipeNode = parentNodeScript.ExtendPipe().GetComponent<PipeNode>();
-            parentPipe.SetAllModifed();
-            parentPipe.BuildPipes();
-            pipesScript.UpdateEditNodes();
-            Debug.Log("Node Added: " + newPipeNode);
-        }
-    }
+    // public void AddNode()
+    // {
+    //     if (parentNodeScript.CanExtendPipes())
+    //     {
+    //         newPipeNode = parentNodeScript.ExtendPipe().GetComponent<PipeNode>();
+    //         parentPipe.SetAllModifed();
+    //         parentPipe.BuildPipes();
+    //         pipesScript.UpdateEditNodes();
+    //         Debug.Log("Node Added: " + newPipeNode);
+    //     }
+    // }
 
     public void SetSelectedNodes()
     {

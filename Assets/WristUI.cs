@@ -18,6 +18,7 @@ public class WristUI : MonoBehaviour
     private Canvas _wristUICanvas;
     public GameObject UI;
     private InputAction _menu;
+    private GlobalVariables globalVariables;
 
     public Transform controller;
     // Start is called before the first frame update
@@ -40,7 +41,8 @@ public class WristUI : MonoBehaviour
     public void AddNode()
     {
         // Cambiar por pipe en edicion activa
-        List<PipeNode> nodesList = FindAnyObjectByType<PipesScript>().selectedNodes;
+        PipesScript pipeBeingEdited = globalVariables.pipeBeingEdited.GetComponent<PipesScript>();
+        List<PipeNode> nodesList = pipeBeingEdited.selectedNodes;
         if(nodesList.Count != 1){
             //ADD WARNING
             Debug.Log("Mas de un nodo seleccionado");
@@ -53,7 +55,7 @@ public class WristUI : MonoBehaviour
         {
             // Adds a node next to the selected node
             Debug.Log(nodesList[0]);
-            nodesList[0].GetComponentInChildren<NodeEditModeLogic>().AddNode();
+            pipeBeingEdited.AddNode();
         }
         // // Deselects node after adding
         // nodesList[0].GetComponentInChildren<NodeEditModeLogic>().SetSelectedNodes();
