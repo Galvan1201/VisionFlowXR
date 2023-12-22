@@ -154,6 +154,11 @@ namespace Wave.Essence.ScenePerception.Sample
 			}
 		}
 
+		public void ToggleSceneMesh(bool visible)
+		{	
+			_scenePerceptionMeshFacade.SetVisibility(visible);
+		}
+
 		private void Update()
 		{
 			// All operation need wait Scene started.

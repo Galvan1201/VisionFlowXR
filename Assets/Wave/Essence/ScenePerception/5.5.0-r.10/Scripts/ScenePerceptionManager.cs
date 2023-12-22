@@ -581,7 +581,7 @@ namespace Wave.Essence.ScenePerception
 		/// <returns>
 		/// A GameObject with all the necessary Mesh related components for rendering a scene mesh in the scene.
 		/// </returns>
-		public GameObject GenerateSceneMesh(WVR_SceneMesh sceneMesh, Material meshMaterial, bool attachMeshCollider = false)
+		public GameObject GenerateSceneMesh(WVR_SceneMesh sceneMesh, Material meshMaterial, bool attachMeshCollider = true)
 		{
 			WVR_Vector3f_t[] sceneVertexBuffer;
 			uint[] sceneIndexBuffer;
@@ -604,6 +604,7 @@ namespace Wave.Essence.ScenePerception
 			if (attachMeshCollider)
 			{
 				sceneMeshGameObject.AddComponent<MeshCollider>();
+				sceneMeshGameObject.layer = 2;
 				// MeshCollider meshCollider = sceneMeshGameObject.AddComponent<MeshCollider>();
 				// meshCollider.convex = true; // Adjust based on the shape of your mesh
 

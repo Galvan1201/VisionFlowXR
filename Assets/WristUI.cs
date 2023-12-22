@@ -34,7 +34,7 @@ public class WristUI : MonoBehaviour
 
     public void PipeCreation()
     {   
-        NewPipeLogic = Instantiate(NewPipeLogic);
+         Instantiate(NewPipeLogic);
     }
 
     public void AddNode()

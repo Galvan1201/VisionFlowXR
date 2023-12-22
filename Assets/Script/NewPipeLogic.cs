@@ -62,6 +62,7 @@ public class NewPipeLogic : MonoBehaviour
 
     public void OnEnable()
     {
+        Debug.Log("Entra a OnEnable");
         // Initialize
         UnityEngine.Debug.Log("StartTutorial");
         currentStep = PipeCreationSteps.Step1_NewPipeBttn;
@@ -206,8 +207,8 @@ public class NewPipeLogic : MonoBehaviour
             case PipeCreationSteps.Step6_ConfirmNode2:
                 // Store the position of the first node on the list
                 nodePositions.Add(secondNode.transform.position);
-                firstNode.SetActive(false);
-                secondNode.SetActive(false);
+                Destroy(firstNode);
+                Destroy(secondNode);
                 //Places the pipe and sets its components
                 pipeToPlace = Instantiate(pipeToPlace);
                 pipeToPlaceSettings = pipeToPlace.GetComponent<PipeBase>().PipeSettings;
