@@ -14,6 +14,7 @@ public class GlobalVariables : MonoBehaviour
     public GameObject pipesOnSceneContainer;
     public InputActionAsset inputActions;
     public GameObject mainMenu;
+    public AlertHandler alert;
     
     private InputAction _mainMenu;
     // Start is called before the first frame update

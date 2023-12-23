@@ -48,6 +48,8 @@ public class NewPipeLogic : MonoBehaviour
     private Slider slider;
     private Toggle toggle;
 
+    private GlobalVariables globalVariables;
+
     enum PipeCreationSteps
     {
         Step1_NewPipeBttn,
@@ -62,7 +64,6 @@ public class NewPipeLogic : MonoBehaviour
 
     public void OnEnable()
     {
-        Debug.Log("Entra a OnEnable");
         // Initialize
         UnityEngine.Debug.Log("StartTutorial");
         currentStep = PipeCreationSteps.Step1_NewPipeBttn;
@@ -86,6 +87,7 @@ public class NewPipeLogic : MonoBehaviour
         pipeInUI = settingsUI.transform.Find("NewPipeCreatorMenu").Find("NewPipeShow").GetComponent<PipeBase>();
         pipeInUI.BuildPipes();
         PerformStep();
+        
     }
     void Update()
     {
@@ -202,6 +204,9 @@ public class NewPipeLogic : MonoBehaviour
 
             case PipeCreationSteps.Step4_GrabObject:
                 Destroy(settingsUI);
+                globalVariables = GameObject.Find("GlobalVariables").GetComponent<GlobalVariables>();
+                globalVariables.pipeBeingEdited = null;
+                globalVariables.ToggleEditPipe();
                 currentStep = PipeCreationSteps.Step5_ConfirmPosition;
                 firstNodeAccept.GetComponent<Button>().onClick.AddListener(PerformStep);
 

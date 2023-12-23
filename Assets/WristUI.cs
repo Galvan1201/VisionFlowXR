@@ -18,7 +18,7 @@ public class WristUI : MonoBehaviour
     private Canvas _wristUICanvas;
     public GameObject UI;
     private InputAction _menu;
-    private GlobalVariables globalVariables;
+    public GlobalVariables globalVariables;
 
     public Transform controller;
     // Start is called before the first frame update
@@ -63,12 +63,12 @@ public class WristUI : MonoBehaviour
 
     public void AddNodeBetween()
     {
-        FindAnyObjectByType<PipesScript>().InsertNodeInBetween();
+        globalVariables.pipeBeingEdited.GetComponent<PipesScript>().InsertNodeInBetween();
     }
 
     public void DeleteNode()
     {
-        FindAnyObjectByType<PipesScript>().DeleteNode();
+        globalVariables.pipeBeingEdited.GetComponent<PipesScript>().DeleteNode();
     }
 
     // Update is called once per frame

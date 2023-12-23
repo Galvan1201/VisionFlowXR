@@ -91,13 +91,13 @@ public class NodeEditModeLogic : MonoBehaviour
             {
                 pipesScript.selectedNodes.Add(parentNodeScript);
                 //ADD WARNING NEW NODE REMOVED
-                Debug.Log("Node Added: " + parentNodeScript);
+                pipesScript.globalVariables.alert.Alert("Node removed succesfully", 1f, MessageType.Message);
                 renderer.material = selectedMat;
             }
             else
             {
                 //ADD WARNING
-                Debug.Log("Maximum nodes selected. Cannot add more.");
+                pipesScript.globalVariables.alert.Alert("You can only select 2 nodes", 1f, MessageType.Error);
             }
         }
         if (pipesScript.selectedNodes.Count == 0)
@@ -129,7 +129,6 @@ public class NodeEditModeLogic : MonoBehaviour
 
         foreach (Collider hitCollider in hitColliders)
         {
-            Debug.Log(hitCollider);
             if (hitCollider.gameObject.layer == 2)
             {
                 isColliding = true;

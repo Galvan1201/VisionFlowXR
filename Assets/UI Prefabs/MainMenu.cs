@@ -28,8 +28,12 @@ public class MainMenu : MonoBehaviour
             generatedElement.transform.Find("costValue").GetComponent<TextMeshProUGUI>().text = "12345";
             generatedElement.transform.Find("lengthValue").GetComponent<TextMeshProUGUI>().text = "25";
             generatedElement.transform.Find("Configure").GetComponent<Button>().onClick.AddListener(PipeSettings);
-            generatedElement.transform.Find("Edit").GetComponent<Button>().onClick.AddListener(() => EditPipeScreen(pipe));
+            generatedElement.transform.Find("Edit").GetComponent<Button>().onClick.AddListener(() => EditPipeScreen(pipe, generatedElement));
             generatedElement.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(DeletePipe);
+            if(globalVariables.pipeBeingEdited == pipe)
+            {
+                generatedElement.GetComponent<Image>().color = new Color(199f / 255f, 1f, 179f / 255f, 1f); // This is the color #C7FFB3;
+            }
         }
     }
 
@@ -42,15 +46,17 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("PipeSettings");
     }
-    void EditPipeScreen(GameObject pipe)
+    void EditPipeScreen(GameObject pipe, GameObject element)
     {
         if(globalVariables.pipeBeingEdited != pipe)
         {
             globalVariables.pipeBeingEdited = pipe;
             globalVariables.ToggleEditPipe();
+            gameObject.SetActive(false);
         }
         else
         {
+            globalVariables.alert.Alert("This pipe is already on edit mode", 2f, MessageType.Alert);
             Debug.Log("Pipe is en edit mode");
         }
     }

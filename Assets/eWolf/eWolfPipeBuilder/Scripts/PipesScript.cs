@@ -34,8 +34,6 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
 
         public void ToggleEditMode(bool editMode)
         {
-            Debug.Log("EditMode toggled to: " + editMode);
-
             foreach (Transform child in transform)
             {
                 // Check if the child has already been instanced
@@ -44,10 +42,10 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                     // Child has already been instanced, toggle its visibility
                     GameObject childPrefab = child.GetChild(0).gameObject;
                     childPrefab.SetActive(editMode);
-                    Debug.Log("Prefab visibility toggled to: " + editMode);
                 }
+                child.GetComponent<XRGrabInteractable>().enabled = editMode;
             }
-            isEditing = !editMode;
+            isEditing = editMode;
         }
 
         // Regenerates the spheres placed on the nodes, updates the nodes list and deselects all nodes.
