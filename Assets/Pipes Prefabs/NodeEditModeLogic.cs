@@ -91,7 +91,6 @@ public class NodeEditModeLogic : MonoBehaviour
             {
                 pipesScript.selectedNodes.Add(parentNodeScript);
                 //ADD WARNING NEW NODE REMOVED
-                pipesScript.globalVariables.alert.Alert("Node removed succesfully", 1f, MessageType.Message);
                 renderer.material = selectedMat;
             }
             else

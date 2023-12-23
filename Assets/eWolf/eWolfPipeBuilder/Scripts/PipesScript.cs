@@ -5,6 +5,7 @@ using eWolf.PipeBuilder.Data;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem.Utilities;
 
 namespace eWolf.PipeBuilder.VisionFlowScripts
 {
@@ -22,6 +23,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         public List<PipeNode> selectedNodes;
         public float radius;
         public GlobalVariables globalVariables;
+        public float totalLength;
 
         // private void ClearAllPipes()
         // {
@@ -93,6 +95,24 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         //     nodesPositions = newNodesPositions;
         //     newNodesPositions.Clear();
         // }
+
+        public void CalculateTotalLength()
+        {   
+            totalLength = 0f;
+            List<float> lengths = new List<float>();
+            foreach (Transform node in transform)
+            {
+                foreach (PipeNode mate in node.GetComponent<PipeNode>()._pipes)
+                {
+                if(!lengths.Contains((mate.transform.position - node.position).magnitude))
+                {
+                    lengths.Add((mate.transform.position - node.position).magnitude);
+                    totalLength += (mate.transform.position - node.position).magnitude;
+                }
+                }
+            }
+            Debug.Log($"Total Length {totalLength}");
+        }
 
         public void AddNode()
         {
@@ -202,7 +222,6 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
 
         private void Update()
         {
-            // Pipe.BuildPipes();
         }
 
         // private void OnGUI()

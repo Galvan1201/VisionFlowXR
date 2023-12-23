@@ -26,7 +26,8 @@ public class MainMenu : MonoBehaviour
             generatedElement.name = pipe.name;
             generatedElement.transform.Find("PipeName").GetComponent<TextMeshProUGUI>().text = pipe.name;
             generatedElement.transform.Find("costValue").GetComponent<TextMeshProUGUI>().text = "12345";
-            generatedElement.transform.Find("lengthValue").GetComponent<TextMeshProUGUI>().text = "25";
+            pipe.GetComponent<PipesScript>().CalculateTotalLength();
+            generatedElement.transform.Find("lengthValue").GetComponent<TextMeshProUGUI>().text = pipe.GetComponent<PipesScript>().totalLength.ToString("F2");
             generatedElement.transform.Find("Configure").GetComponent<Button>().onClick.AddListener(PipeSettings);
             generatedElement.transform.Find("Edit").GetComponent<Button>().onClick.AddListener(() => EditPipeScreen(pipe, generatedElement));
             generatedElement.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(DeletePipe);
