@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using eWolf.PipeBuilder.VisionFlowScripts;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,11 @@ public class MainMenu : MonoBehaviour
 
     // Start is called before the first frame update
     void OnEnable()
+    {
+        UpdateTable();
+    }
+
+    void UpdateTable()
     {
         foreach (Transform child in pipesPanel.transform)
         {
@@ -28,19 +34,27 @@ public class MainMenu : MonoBehaviour
             generatedElement.transform.Find("costValue").GetComponent<TextMeshProUGUI>().text = "12345";
             pipe.GetComponent<PipesScript>().CalculateTotalLength();
             generatedElement.transform.Find("lengthValue").GetComponent<TextMeshProUGUI>().text = pipe.GetComponent<PipesScript>().totalLength.ToString("F2");
+            pipe.GetComponent<PipesScript>().CalculateCost();
+            generatedElement.transform.Find("costValue").GetComponent<TextMeshProUGUI>().text = pipe.GetComponent<PipesScript>().totalCost.ToString("F2");
             generatedElement.transform.Find("Configure").GetComponent<Button>().onClick.AddListener(PipeSettings);
             generatedElement.transform.Find("Edit").GetComponent<Button>().onClick.AddListener(() => EditPipeScreen(pipe, generatedElement));
-            generatedElement.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(DeletePipe);
+            generatedElement.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(() => DeletePipe(pipe));
             if(globalVariables.pipeBeingEdited == pipe)
             {
                 generatedElement.GetComponent<Image>().color = new Color(199f / 255f, 1f, 179f / 255f, 1f); // This is the color #C7FFB3;
             }
         }
+        gameObject.transform.Find("Close").GetComponent<Button>().onClick.AddListener(Close);
     }
 
     void OnDisable()
     {
 
+    }
+
+    void Close()
+    {
+        gameObject.SetActive(false);
     }
 
     void PipeSettings()
@@ -61,9 +75,11 @@ public class MainMenu : MonoBehaviour
             Debug.Log("Pipe is en edit mode");
         }
     }
-    void DeletePipe()
+    void DeletePipe(GameObject pipe)
     {
-        Debug.Log("deletePipe");
+        string pipeName = pipe.name;
+        Destroy(pipe);
+        Destroy(pipesPanel.transform.Find(pipeName).gameObject);
     }
 
 

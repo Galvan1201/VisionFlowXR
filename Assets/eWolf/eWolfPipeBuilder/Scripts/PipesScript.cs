@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using eWolf.PipeBuilder.Helpers;
 using UnityEngine;
 using eWolf.PipeBuilder.Data;
@@ -24,15 +24,8 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         public float radius;
         public GlobalVariables globalVariables;
         public float totalLength;
-
-        // private void ClearAllPipes()
-        // {
-        //     foreach (Transform child in Pipe.transform)
-        //     {
-        //         GameObject.Destroy(child.gameObject);
-        //     }
-        // }
-
+        public float totalCost;
+        float materialCost;
 
         public void ToggleEditMode(bool editMode)
         {
@@ -84,35 +77,67 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 nodesPositions.Add(node.position);
             }
         }
-        // Call this function when rebuilding the pipe is necessary
-        // public void UpdateNodesList()
-        // {
-        //     foreach (Transform node in transform)
-        //     {
-        //         // insert the node position into the list
-        //         newNodesPositions.Add(node.position);
-        //     }
-        //     nodesPositions = newNodesPositions;
-        //     newNodesPositions.Clear();
-        // }
 
         public void CalculateTotalLength()
-        {   
+        {
             totalLength = 0f;
             List<float> lengths = new List<float>();
             foreach (Transform node in transform)
             {
                 foreach (PipeNode mate in node.GetComponent<PipeNode>()._pipes)
                 {
-                if(!lengths.Contains((mate.transform.position - node.position).magnitude))
-                {
-                    lengths.Add((mate.transform.position - node.position).magnitude);
-                    totalLength += (mate.transform.position - node.position).magnitude;
-                }
+                    if (!lengths.Contains((mate.transform.position - node.position).magnitude))
+                    {
+                        lengths.Add((mate.transform.position - node.position).magnitude);
+                        totalLength += (mate.transform.position - node.position).magnitude;
+                    }
                 }
             }
-            Debug.Log($"Total Length {totalLength}");
+            //Debug.Log($"Total Length {totalLength}");
         }
+
+
+        public void CalculateCost()
+        {
+            switch (Pipe.Material.name.Replace(" (Instance)", ""))
+            {
+                case "Aluminum":
+                    materialCost = 0.3f;
+                    break;
+                case "Brass":
+                    materialCost = 1.25f;
+                    break;
+                case "Cast Iron":
+                    materialCost = 0.46f;
+                    break;
+                case "Concrete":
+                    materialCost = 0.256f;
+                    break;
+                case "Copper":
+                    materialCost = 0.69f;
+                    break;
+                case "CPVC":
+                    materialCost = 0.43f;
+                    break;
+                case "Glass fiber":
+                    materialCost = 1.34f;
+                    break;
+                case "PVC":
+                    materialCost = 0.0715f;
+                    break;
+                case "Steel (regular)":
+                    materialCost = 0.18f;
+                    break;
+                case "Steel (stainless)":
+                    materialCost = 0.80f;
+                    break;
+                default:
+                    Debug.LogError("Invalid material type");
+                    break;
+            }
+            totalCost = totalLength * radius*1000 * materialCost * 1.3f;
+        }
+
 
         public void AddNode()
         {
@@ -146,52 +171,6 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             UpdateEditNodes();
         }
 
-        // public void CreateOrExtendPipe()
-        // {
-        //     GameObject parentObject = GameObject.Find("PipeBase_pf");
-        //     Debug.Log(parentObject.transform.childCount);
-
-        //     if (parentObject.transform.childCount == 0)
-        //     {
-        //         // Parent object doesn't exist, create a new pipe.
-        //         Debug.Log("Creating a new pipe.");
-        //         GameObject go = Pipe.AddPipes();
-        //         PipeNode pipeNode = go.GetComponent<PipeNode>();
-        //         GameObject extendPipe = pipeNode.ExtendPipe();
-        //         Pipe.SetAllModifed();
-        //         Pipe.BuildPipes();
-        //     }
-        //     else
-        //     {
-        //         // Parent object exists, extend the existing pipe.
-        //         Debug.Log("Extending the existing pipe.");
-        //         int childCount = parentObject.transform.childCount;
-        //         Debug.Log("");
-        //         if (childCount > 0)
-        //         {
-        //             PipeNode[] pipeNodes = parentObject.GetComponentsInChildren<PipeNode>();
-        //             _pipeNode = pipeNodes[pipeNodes.Length - 1];
-        //             Debug.Log(_pipeNode);
-        //             _pipeNode.ExtendPipe();
-        //             Pipe.SetAllModifed();
-        //             Pipe.BuildPipes();
-        //             // lastChild = lastChild.ExtendPipe().GetComponent<PipeNode>();
-        //             // Your logic for extending the existing pipe goes here.
-        //         }
-        //         else
-        //         {
-        //             Debug.Log("No children found.");
-        //         }
-        //     }
-        // }
-        // public Slider radiusSlider;
-        // public void ChangeRadiusOnMenu()
-        // {
-        //     Pipe.PipeSettings.Radius = radiusSlider.value / 100 / 2; //a mm/ de diametro a radio
-        //     Pipe.SetAllModifed();
-        //     Pipe.BuildPipes();
-        // }
-
 
         //Called when need of create an intial pipe from a list
         public void CreateInitialPipeFromList()
@@ -223,24 +202,5 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         private void Update()
         {
         }
-
-        // private void OnGUI()
-        // {
-        //     int y = 10;
-        //     if (GUI.Button(new Rect(10, y, 250, 45), "Create or Extend Pipe"))
-        //     {
-        //         CreateOrExtendPipe();
-        //     }
-        //     y += 50;
-        //     if (GUI.Button(new Rect(10, y, 250, 45), "Clear Pipes"))
-        //     {
-        //         ClearAllPipes();
-        //     }
-        //     y += 50;
-        //     if (GUI.Button(new Rect(10, y, 250, 45), "Create pipes from list"))
-        //     {
-        //         CreateBasicPipeList();
-        //     }
-        // }
     }
 }

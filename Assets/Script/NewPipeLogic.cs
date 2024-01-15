@@ -78,6 +78,7 @@ public class NewPipeLogic : MonoBehaviour
         Quaternion newRotation = Quaternion.LookRotation(new Vector3(MainCamera.forward.x, 0, MainCamera.forward.z));
         // Instantiate the UI with the calculated position and rotation
         settingsUI = Instantiate(settingsUI, newPosition, newRotation);
+        settingsUI.transform.Find("NewPipeCreatorMenu").Find("Header").Find("Close button").GetComponent<Button>().onClick.AddListener(Close);
         wristUI = FindAnyObjectByType<WristUI>();
         newpipeButton = wristUI.gameObject.transform.Find("Place Pipe").GetComponent<Button>();
         newpipeButton.enabled = false;
@@ -130,6 +131,13 @@ public class NewPipeLogic : MonoBehaviour
                 secondNodeAccept.SetActive(false);
             }
         }
+    }
+
+    void Close()
+    {
+        newpipeButton.enabled = true;
+        Destroy(settingsUI);
+        Destroy(gameObject);
     }
 
     private void OnDestroy()
@@ -279,7 +287,7 @@ public class NewPipeLogic : MonoBehaviour
 
     public void ChangeRadiusOnMenu(float radius)
     {
-        pipeInUI.PipeSettings.Radius = slider.value / 100 / 4; //a mm/ de diametro a radio
+        pipeInUI.PipeSettings.Radius = slider.value / 300 / 5; //a mm/ de diametro a radio
         pipeInUI.SetAllModifed();
         pipeInUI.BuildPipes();
         radiusText = content.Find("Radius Slider").Find("Value").GetComponent<TextMeshProUGUI>();
