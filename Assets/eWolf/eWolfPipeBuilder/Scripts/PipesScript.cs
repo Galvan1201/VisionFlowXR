@@ -132,7 +132,8 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                     materialCost = 0.80f;
                     break;
                 default:
-                    Debug.LogError("Invalid material type");
+                    Debug.Log("Default Steel");
+                    materialCost = 0.18f;
                     break;
             }
             totalCost = totalLength * radius*1000 * materialCost * 1.3f;

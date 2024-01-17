@@ -53,9 +53,9 @@ public class NodeEditModeLogic : MonoBehaviour
         renderer = gameObject.GetComponent<Renderer>();
 
         wristUI = FindAnyObjectByType<WristUI>();
-        addButton = wristUI.gameObject.transform.Find("Add Node").GetComponent<Button>();
-        splitButton = wristUI.gameObject.transform.Find("Split Node").GetComponent<Button>();
-        deleteButton = wristUI.gameObject.transform.Find("Delete Node").GetComponent<Button>();
+        addButton = wristUI.gameObject.transform.Find("Add Node").GetComponentInChildren<Button>();
+        splitButton = wristUI.gameObject.transform.Find("Split Node").GetComponentInChildren<Button>();
+        deleteButton = wristUI.gameObject.transform.Find("Delete Node").GetComponentInChildren<Button>();
         // Debug.Log(addButton);
         // addButton.onClick.AddListener(AddNode);
 
@@ -101,21 +101,21 @@ public class NodeEditModeLogic : MonoBehaviour
         }
         if (pipesScript.selectedNodes.Count == 0)
         {
-            addButton.enabled = false;
-            splitButton.enabled = false;
-            deleteButton.enabled = false;
+            addButton.interactable = false;
+            splitButton.interactable = false;
+            deleteButton.interactable = false;
         }
         if (pipesScript.selectedNodes.Count == 1)
         {
-            addButton.enabled = true;
-            splitButton.enabled = false;
-            deleteButton.enabled = true;
+            addButton.interactable = true;
+            splitButton.interactable = false;
+            deleteButton.interactable = true;
         }
         if (pipesScript.selectedNodes.Count == 2)
         {
-            addButton.enabled = false;
-            splitButton.enabled = true;
-            deleteButton.enabled = false;
+            addButton.interactable = false;
+            splitButton.interactable = true;
+            deleteButton.interactable = false;
         }
     }
 

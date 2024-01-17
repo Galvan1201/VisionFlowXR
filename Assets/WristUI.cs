@@ -29,7 +29,7 @@ public class WristUI : MonoBehaviour
         _menu.Enable();
         _menu.performed += ToggleMenu;
         UI.transform.SetParent(controller.transform, false);
-        Vector3 newPosition = new Vector3(-0.04f, 0.06f, 0); // Replace x, y, z with your desired coordinates
+        Vector3 newPosition = new Vector3(-0.08f, 0.07f, -0.05f); // Replace x, y, z with your desired coordinates
         UI.transform.localPosition = newPosition;
     }
 

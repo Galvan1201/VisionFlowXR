@@ -41,7 +41,7 @@ public class MainMenu : MonoBehaviour
             generatedElement.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(() => DeletePipe(pipe));
             if(globalVariables.pipeBeingEdited == pipe)
             {
-                generatedElement.GetComponent<Image>().color = new Color(199f / 255f, 1f, 179f / 255f, 1f); // This is the color #C7FFB3;
+                generatedElement.GetComponent<Image>().color = new Color(132f / 255f, 231f / 255f, 213f / 255f, 1f); // This is the color #F7B142;
             }
         }
         gameObject.transform.Find("Close").GetComponent<Button>().onClick.AddListener(Close);

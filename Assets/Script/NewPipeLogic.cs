@@ -80,8 +80,8 @@ public class NewPipeLogic : MonoBehaviour
         settingsUI = Instantiate(settingsUI, newPosition, newRotation);
         settingsUI.transform.Find("NewPipeCreatorMenu").Find("Header").Find("Close button").GetComponent<Button>().onClick.AddListener(Close);
         wristUI = FindAnyObjectByType<WristUI>();
-        newpipeButton = wristUI.gameObject.transform.Find("Place Pipe").GetComponent<Button>();
-        newpipeButton.enabled = false;
+        newpipeButton = wristUI.gameObject.transform.Find("Place Pipe").GetComponentInChildren<Button>();
+        newpipeButton.interactable = false;
 
         //Find menu content and UIPipe
         content = settingsUI.transform.Find("NewPipeCreatorMenu").Find("Content");
@@ -135,7 +135,7 @@ public class NewPipeLogic : MonoBehaviour
 
     void Close()
     {
-        newpipeButton.enabled = true;
+        newpipeButton.interactable = true;
         Destroy(settingsUI);
         Destroy(gameObject);
     }
@@ -271,7 +271,7 @@ public class NewPipeLogic : MonoBehaviour
                 pipeToPlaceScript.CreateInitialPipeFromList();
                 pipeToPlace.transform.SetParent(GameObject.Find("Pipes").transform);
                 pipeToPlace.SetActive(true);
-                newpipeButton.enabled = true;
+                newpipeButton.interactable = true;
                 Destroy(gameObject);
                 break;
 

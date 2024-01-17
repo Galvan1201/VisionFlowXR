@@ -434,7 +434,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3200426400249341180
 RectTransform:
   m_ObjectHideFlags: 0
@@ -564,6 +564,7 @@ MonoBehaviour:
   inputActions: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   NewPipeLogic: {fileID: 833532755641435914, guid: 13856942a5ccff6468c0298961ccdff7, type: 3}
   UI: {fileID: 3271681830889577796}
+  globalVariables: {fileID: 0}
   controller: {fileID: 0}
 --- !u!1 &3911873214177828703
 GameObject:
