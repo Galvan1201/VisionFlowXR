@@ -8,6 +8,7 @@ public class WarningChooseHandler : MonoBehaviour
 {
     public TextMeshProUGUI textComp;
     CanvasGroup canvasGroup;
+    Canvas canvas;
     private System.Action onConfirmAction;
     private System.Action onCancelAction;
 
@@ -17,6 +18,7 @@ public class WarningChooseHandler : MonoBehaviour
     void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
+        canvas = GetComponent<Canvas>();
     }
 
     public void ShowWarning(string message, System.Action onConfirm, System.Action onCancel)
@@ -54,6 +56,7 @@ public class WarningChooseHandler : MonoBehaviour
 
     IEnumerator FadeIn()
     {
+        canvas.enabled = true;
         // Use a loop to gradually increase the alpha value
         while (canvasGroup.alpha < 1)
         {
@@ -78,5 +81,6 @@ public class WarningChooseHandler : MonoBehaviour
 
         // Ensure the alpha is set to zero
         canvasGroup.alpha = 0f;
+        canvas.enabled = false;
     }
 }

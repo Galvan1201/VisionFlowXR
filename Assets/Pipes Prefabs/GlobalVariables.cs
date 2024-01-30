@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using eWolf.PipeBuilder;
 using eWolf.PipeBuilder.VisionFlowScripts;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GlobalVariables : MonoBehaviour
 {
     public List<GameObject> pipesOnScene;
-    public float budget;
-    public GameObject pipeBeingEdited = null;
+    public float budget=0;
+    public float currentCost=0;
+    public float remainingBudget=0;
+    public GameObject pipeBeingEdited;
     public GameObject pipesOnSceneContainer;
     public InputActionAsset inputActions;
     public GameObject mainMenu;
@@ -45,8 +46,7 @@ public class GlobalVariables : MonoBehaviour
             if(pipeBeingEdited != childTransform.gameObject)
             {
                 childTransform.GetComponent<PipesScript>().ToggleEditMode(false);
-                childTransform.GetComponent<PipeBase>().Material = childTransform.GetComponentInChildren<NodeEditModeLogic>().originalMaterial;
-
+                childTransform.GetComponent<PipeBase>().Material = childTransform.GetComponentInChildren<NodeEditModeLogic>()?.originalMaterial ?? childTransform.GetComponent<PipeBase>()?.Material;
             }
             else
             {
@@ -55,10 +55,20 @@ public class GlobalVariables : MonoBehaviour
         }
     }
 
+    public void budgetUpdate()
+    {   
+        currentCost = 0;
+        foreach (Transform childTransform in pipesOnSceneContainer.transform)
+        {
+            childTransform.GetComponent<PipesScript>().CalculateCost();
+            currentCost += childTransform.GetComponent<PipesScript>().totalCost;
+        }
+        remainingBudget = budget - currentCost;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     private void OnDestroy()

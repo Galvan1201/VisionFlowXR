@@ -49,6 +49,8 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             Pipe.SetAllModifed();
             Pipe.BuildPipes();
             UpdateEditNodes();
+            CalculateTotalLength();
+            CalculateCost();
         }
 
         // Regenerates the spheres placed on the nodes, updates the nodes list and deselects all nodes.
@@ -82,7 +84,6 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                     nodeEditMode.gameObject.GetComponent<Renderer>().material = nodeEditMode.deselectedMat;
                     nodeEditMode.originalMaterial = Pipe.Material;
                 }
-                Debug.Log(node.childCount);
                 node.GetChild(0).localScale = new Vector3(radius * 2.5f, radius * 2.5f, radius * 2.5f);
                 nodesPositions.Add(node.position);
             }
