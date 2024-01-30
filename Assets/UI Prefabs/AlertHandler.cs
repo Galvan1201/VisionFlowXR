@@ -15,7 +15,7 @@ public class AlertHandler : MonoBehaviour
     TextMeshProUGUI textComp;
     CanvasGroup canvasGroup;
     Image backgroundImage;
-    public Camera camera;
+    public Camera mainCamera;
 
     // Start is called before the first frame update
     void Awake()
@@ -36,7 +36,7 @@ public class AlertHandler : MonoBehaviour
         canvasGroup.alpha = 0f;
 
         // Set the alert canvas in front of the camera
-        Transform cameraTransform = camera.transform;
+        Transform cameraTransform = mainCamera.transform;
         transform.position = cameraTransform.position + cameraTransform.forward * 0.1f; // Adjust the distance as needed
 
         // Start the fade-in animation
