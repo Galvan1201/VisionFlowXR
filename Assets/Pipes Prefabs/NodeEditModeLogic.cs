@@ -19,7 +19,7 @@ public class NodeEditModeLogic : MonoBehaviour
     private WristUI wristUI;
     private GameObject parentNodeObject;
     private PipeNode parentNodeScript;
-    private Material originalMaterial;
+    public Material originalMaterial;
     //Add logic variables
     private GameObject addObject;
     private Button addButton;
@@ -120,7 +120,7 @@ public class NodeEditModeLogic : MonoBehaviour
     }
 
     //Change if necessary
-    private float collisionRadius = 0.2f;
+    private float collisionRadius = 0.1f;
     void CheckForCollision()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, collisionRadius);

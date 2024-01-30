@@ -46,6 +46,8 @@ public class NewPipeLogic : MonoBehaviour
     private PipeBase pipeInUI;
 
     private Slider slider;
+    Slider flangeSlider;
+    float flangeSliderValue;
     private Toggle toggle;
 
     private GlobalVariables globalVariables;
@@ -68,7 +70,7 @@ public class NewPipeLogic : MonoBehaviour
         UnityEngine.Debug.Log("StartTutorial");
         currentStep = PipeCreationSteps.Step1_NewPipeBttn;
         MainCamera = GameObject.Find("Main Camera").GetComponent<Transform>();
-        radiusToSet = 30f/1000f;
+        radiusToSet = 30f/1000f/2f;
 
         // Set the position in front of the main camera
         float distanceFromCamera = 1f; // Adjust the distance as needed
@@ -181,6 +183,13 @@ public class NewPipeLogic : MonoBehaviour
                 toggle = content.Find("Flange Toggle").Find("Offset Anchor").GetComponentInChildren<Toggle>();
                 toggle.onValueChanged.AddListener(ToggleFlangesOnMenu);
 
+                flangeSlider = content.Find("Flange Size").Find("Slider").GetComponent<Slider>();
+
+                TextMeshProUGUI flangeLengthText = content.Find("Flange Size").Find("Value").GetComponent<TextMeshProUGUI>();
+                flangeSlider.onValueChanged.AddListener(value => flangeLengthText.text = value.ToString("F2"));
+
+                
+
                 currentStep = PipeCreationSteps.Step2_SetSettings;
                 content.Find("Continue button").GetComponent<Button>().onClick.AddListener(PerformStep);
                 break;
@@ -188,6 +197,7 @@ public class NewPipeLogic : MonoBehaviour
             case PipeCreationSteps.Step2_SetSettings:
                 // UnityEngine.Debug.Log(currentStep);
                 // UnityEngine.Debug.Log("Save pipe settings and instansiate prefab");
+                flangeSliderValue = content.Find("Flange Size").Find("Slider").GetComponent<Slider>().value;
                 content.gameObject.SetActive(false);
                 pipeInUI.gameObject.SetActive(false);
                 currentStep = PipeCreationSteps.Step3_ReadyToPlace;
@@ -256,7 +266,8 @@ public class NewPipeLogic : MonoBehaviour
                 pipeToPlaceSettings.CornersDetail.Steps = 6;
 
                 //Intervalo a 1 metro, cambiar.
-                pipeToPlaceSettings.FlangeDetail.Interval = 1;
+                pipeToPlaceSettings.FlangeDetail.Interval = flangeSliderValue;
+                //pipeToPlaceSettings.FlangeDetail.Interval = 1;
                 if (materialToSet != null)
                 {
                     pipeToPlace.GetComponent<PipeBase>().Material = materialToSet;
@@ -268,6 +279,8 @@ public class NewPipeLogic : MonoBehaviour
                 }
                 //Sends the nodesList to the custom pipe builder
                 pipeToPlaceScript.nodesPositions = nodePositions;
+                pipeToPlace.name = "Pipe No." + globalVariables.pipesPlacedCount.ToString();
+                globalVariables.pipesPlacedCount += 1;
                 pipeToPlaceScript.CreateInitialPipeFromList();
                 pipeToPlace.transform.SetParent(GameObject.Find("Pipes").transform);
                 pipeToPlace.SetActive(true);
@@ -287,12 +300,12 @@ public class NewPipeLogic : MonoBehaviour
 
     public void ChangeRadiusOnMenu(float radius)
     {
-        pipeInUI.PipeSettings.Radius = slider.value / 300 / 5; //a mm/ de diametro a radio
+        pipeInUI.PipeSettings.Radius = slider.value / 300 / 5/2; //a mm/ de diametro a radio
         pipeInUI.SetAllModifed();
         pipeInUI.BuildPipes();
         radiusText = content.Find("Radius Slider").Find("Value").GetComponent<TextMeshProUGUI>();
         radiusText.text = slider.value.ToString();
-        radiusToSet = radius / 1000;
+        radiusToSet = radius / 1000/2;
     }
 
     // Toggles flanges

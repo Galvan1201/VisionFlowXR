@@ -19,6 +19,8 @@ public class matSelectedNewPipe : MonoBehaviour
     // Update is called once per frame
     void click()
     {   
-        newPipeLogic.ChangeMaterial(gameObject.GetComponent<Renderer>());
+        if(newPipeLogic){
+            newPipeLogic.ChangeMaterial(gameObject.GetComponent<Renderer>());
+        }
     }
 }

@@ -15,6 +15,7 @@ public class GlobalVariables : MonoBehaviour
     public InputActionAsset inputActions;
     public GameObject mainMenu;
     public AlertHandler alert;
+    public int pipesPlacedCount = 1;
     
     private InputAction _mainMenu;
     // Start is called before the first frame update
@@ -44,6 +45,8 @@ public class GlobalVariables : MonoBehaviour
             if(pipeBeingEdited != childTransform.gameObject)
             {
                 childTransform.GetComponent<PipesScript>().ToggleEditMode(false);
+                childTransform.GetComponent<PipeBase>().Material = childTransform.GetComponentInChildren<NodeEditModeLogic>().originalMaterial;
+
             }
             else
             {

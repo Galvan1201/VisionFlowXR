@@ -43,6 +43,14 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             isEditing = editMode;
         }
 
+
+        public void UpdatePipe()
+        {
+            Pipe.SetAllModifed();
+            Pipe.BuildPipes();
+            UpdateEditNodes();
+        }
+
         // Regenerates the spheres placed on the nodes, updates the nodes list and deselects all nodes.
         public void UpdateEditNodes()
         {
@@ -56,7 +64,6 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 {
                     // node hasn't been instanced, instantiate the prefab
                     GameObject instantiatedPrefab = Instantiate(nodeEditMode, node.position, node.rotation, node);
-                    nodeEditMode.transform.localScale = new Vector3(radius * 2.5f, radius * 2.5f, radius * 2.5f);
                     XRGrabInteractable grabInteractable = node.AddComponent<XRGrabInteractable>();
                     grabInteractable.attachTransform = instantiatedPrefab.transform;
                     grabInteractable.useDynamicAttach = true;
@@ -73,7 +80,10 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                     //Changes node sphere material to deselected
                     NodeEditModeLogic nodeEditMode = node.GetComponentInChildren<NodeEditModeLogic>();
                     nodeEditMode.gameObject.GetComponent<Renderer>().material = nodeEditMode.deselectedMat;
+                    nodeEditMode.originalMaterial = Pipe.Material;
                 }
+                Debug.Log(node.childCount);
+                node.GetChild(0).localScale = new Vector3(radius * 2.5f, radius * 2.5f, radius * 2.5f);
                 nodesPositions.Add(node.position);
             }
         }
@@ -107,7 +117,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 case "Brass":
                     materialCost = 1.25f;
                     break;
-                case "Cast Iron":
+                case "Cast iron":
                     materialCost = 0.46f;
                     break;
                 case "Concrete":
@@ -145,9 +155,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             if (selectedNodes[0].CanExtendPipes())
             {
                 selectedNodes[0].ExtendPipe().GetComponent<PipeNode>();
-                Pipe.SetAllModifed();
-                Pipe.BuildPipes();
-                UpdateEditNodes();
+                UpdatePipe();
             }
         }
 
@@ -157,9 +165,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
             if (selectedNodes.Count == 2)
             {
                 Pipe.InsertNode(selectedNodes);
-                Pipe.SetAllModifed();
-                Pipe.BuildPipes();
-                UpdateEditNodes();
+                UpdatePipe();
             }
         }
 
@@ -167,9 +173,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
         {
             Pipe.RemoveNode(selectedNodes[0]);
             DestroyImmediate(selectedNodes[0].gameObject);
-            Pipe.SetAllModifed();
-            Pipe.BuildPipes();
-            UpdateEditNodes();
+            UpdatePipe();
         }
 
 
@@ -193,9 +197,7 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 currentPipeNode.transform.position = pos;
             }
             Destroy(transform.GetChild(0).gameObject);
-            Pipe.SetAllModifed();
-            Pipe.BuildPipes();
-            UpdateEditNodes();
+            UpdatePipe();
             globalVariables = GameObject.Find("GlobalVariables").GetComponent<GlobalVariables>();
             globalVariables.pipeBeingEdited = gameObject;
         }
