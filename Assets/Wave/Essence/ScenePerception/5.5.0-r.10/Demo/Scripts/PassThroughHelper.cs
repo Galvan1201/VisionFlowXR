@@ -28,7 +28,7 @@ namespace Wave.Essence.ScenePerception.Sample
                 hmd.clearFlags = CameraClearFlags.SolidColor;
                 hmd.backgroundColor = new Color(0, 0, 0, 0);
                 Interop.WVR_ShowPassthroughUnderlay(true);
-                Interop.WVR_SetPassthroughImageQuality(WVR_PassthroughImageQuality.PerformanceMode);
+                Interop.WVR_SetPassthroughImageQuality(WVR_PassthroughImageQuality.DefaultMode);
                 _scenePerceptionMeshFacade.SetVisibility(false);
                 Debug.Log(RoomPanelMeshRenderers);
         }

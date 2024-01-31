@@ -14,6 +14,8 @@ public class MainMenu : MonoBehaviour
 {
     public WarningChooseHandler warningDialog;
     public GameObject pipesPanel;
+    public GameObject pipesPanelScreen;
+    public GameObject appSettingsPanel;
     public GlobalVariables globalVariables;
     [SerializeField] private GameObject pipeElementInList;
 
@@ -31,6 +33,7 @@ public class MainMenu : MonoBehaviour
     TextMeshProUGUI settingsFlangeLengthText;
     Material settingsMaterial;
     TextMeshProUGUI settingsMaterialText;
+    Button applyButton;
 
 
     void Awake()
@@ -52,6 +55,8 @@ public class MainMenu : MonoBehaviour
         settingsFlangeLength.onValueChanged.AddListener(value => settingsFlangeLengthText.text = value.ToString("F2"));
 
         settingsMaterialText = pipeSettings.transform.Find("Materials").Find("Scroll UI Sample").Find("MatName").GetComponent<TextMeshProUGUI>();
+
+        applyButton = pipeSettings.transform.Find("Apply").GetComponent<Button>();
     }
 
     // Start is called before the first frame update
@@ -90,22 +95,26 @@ public class MainMenu : MonoBehaviour
 
     void OnDisable()
     {
-        pipesPanel.SetActive(true);
+        applyButton.onClick.RemoveAllListeners();
+        pipesPanelScreen.SetActive(true);
         pipeSettings.SetActive(false);
         returnButton.SetActive(false);
+        appSettingsPanel.SetActive(false);
     }
 
     void Close()
     {
+        applyButton.onClick.RemoveAllListeners();
         gameObject.SetActive(false);
     }
 
     void PipeSettings(GameObject pipe)
     {
         //Read the pipe settings
-        pipesPanel.SetActive(false);
+        pipesPanelScreen.SetActive(false);
         pipeSettings.SetActive(true);
         returnButton.SetActive(true);
+        appSettingsPanel.SetActive(false);
 
         settingsPipeName.text = pipe.name;
         pipe.GetComponent<PipesScript>().CalculateCost();
@@ -124,8 +133,19 @@ public class MainMenu : MonoBehaviour
         settingsMaterial = pipe.GetComponent<PipeBase>().Material;
         settingsMaterialText.text = settingsMaterial.name.Replace(" (Instance)", "");
 
-        pipeSettings.transform.Find("Apply").GetComponent<Button>().onClick.AddListener(() => ApplyChanges(pipe));
+        applyButton.onClick.RemoveAllListeners();
+        applyButton.onClick.AddListener(() => ApplyChanges(pipe));
     }
+
+    public void AppSettings()
+    {
+        pipesPanelScreen.SetActive(false);
+        pipeSettings.SetActive(false);
+        returnButton.SetActive(false);
+        appSettingsPanel.SetActive(true);
+        applyButton.onClick.RemoveAllListeners();
+    }
+
 
     public void ChangeMaterial(Renderer rendererUI)
     {
@@ -159,9 +179,11 @@ public class MainMenu : MonoBehaviour
 
     public void Return()
     {
-        pipesPanel.SetActive(true);
+        applyButton.onClick.RemoveAllListeners();
+        pipesPanelScreen.SetActive(true);
         pipeSettings.SetActive(false);
         returnButton.SetActive(false);
+        appSettingsPanel.SetActive(false);
 
         UpdateTable();
     }

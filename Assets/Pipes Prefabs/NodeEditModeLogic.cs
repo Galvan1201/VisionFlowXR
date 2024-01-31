@@ -120,35 +120,35 @@ public class NodeEditModeLogic : MonoBehaviour
     }
 
     //Change if necessary
-    private float collisionRadius = 0.1f;
-    void CheckForCollision()
-    {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, collisionRadius);
-        bool isColliding = false;
+    // private float collisionRadius = 0.1f;
+    // void CheckForCollision()
+    // {
+    //     Collider[] hitColliders = Physics.OverlapSphere(transform.position, collisionRadius);
+    //     bool isColliding = false;
 
-        foreach (Collider hitCollider in hitColliders)
-        {
-            if (hitCollider.gameObject.layer == 2)
-            {
-                isColliding = true;
-                // break; // Exit the loop early if a collision is found
-            }
-        }
-        if (isColliding)
-        {
-            if (parentPipe.Material = originalMaterial)
-            {
-                parentPipe.Material = parentPipe.collisionMaterial;
-            }
-        }
-        else
-        {
-            if (parentPipe.Material = parentPipe.collisionMaterial)
-            {
-                parentPipe.Material = originalMaterial;
-            }
-        }
-    }
+    //     foreach (Collider hitCollider in hitColliders)
+    //     {
+    //         if (hitCollider.gameObject.layer == 2)
+    //         {
+    //             isColliding = true;
+    //             // break; // Exit the loop early if a collision is found
+    //         }
+    //     }
+    //     if (isColliding)
+    //     {
+    //         if (parentPipe.Material = originalMaterial)
+    //         {
+    //             parentPipe.Material = parentPipe.collisionMaterial;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if (parentPipe.Material = parentPipe.collisionMaterial)
+    //         {
+    //             parentPipe.Material = originalMaterial;
+    //         }
+    //     }
+    // }
 
 
     // Update is called once per frame
@@ -156,7 +156,7 @@ public class NodeEditModeLogic : MonoBehaviour
     {
         if (grabInteractable.isSelected)
         {   
-            CheckForCollision();
+            // CheckForCollision();
             parentPipe.SetAllModifed();
             parentPipe.BuildPipes();
         }

@@ -26,7 +26,7 @@ namespace Wave.Essence.ScenePerception.Sample
 		private GameObject AnchorDisplayRight = null;
 		private AnchorGenerateMode anchorGenerateMode = AnchorGenerateMode.Raycast;
 
-		[SerializeField] private Material GeneratedMeshMaterialTranslucent, GeneratedMeshMaterialWireframe;
+		[SerializeField] public Material GeneratedMeshMaterialTranslucent, GeneratedMeshMaterialWireframe;
 		[SerializeField] private GameObject leftController = null, rightController = null;
 
 		[SerializeField] private Text modeText;
@@ -34,6 +34,9 @@ namespace Wave.Essence.ScenePerception.Sample
 
 		[SerializeField] private SwipeFunction verticalSwipe = SwipeFunction.AnchorGeneration;
 		[SerializeField] private SwipeFunction horizontalSwipe = SwipeFunction.AnchorMode;
+
+		public float fadeDuration = 5f; // Set the duration of the fade
+		public Slider alphaSlider; // Reference to your UI Slider
 
 		private enum AnchorGenerateMode
 		{
@@ -66,6 +69,7 @@ namespace Wave.Essence.ScenePerception.Sample
 				_spatialAnchorHelper.SetAnchorsShouldBeUpdated();
 			}
 			_scenePerceptionMeshFacade = new ScenePerceptionMeshFacade(_scenePerceptionHelper, anchorDisplayPrefab, GeneratedMeshMaterialTranslucent, GeneratedMeshMaterialWireframe);
+			StartCoroutine(FadeMaterialAlpha());
 		}
 
 		private void OnDisable()
@@ -92,6 +96,21 @@ namespace Wave.Essence.ScenePerception.Sample
 			}
 			// passThroughHelper.ShowPassthroughUnderlay(!Interop.WVR_IsPassthroughOverlayVisible());
 			passThroughHelper.ShowPassthroughUnderlay(true);
+			SetMaterialAlpha(1f); // Set initial alpha to 1
+			alphaSlider.onValueChanged.AddListener(OnSliderValueChanged);
+		}
+
+		void OnSliderValueChanged(float value)
+		{
+			float alpha = Mathf.Clamp01(value); // Ensure the alpha value is between 0 and 1
+			SetMaterialAlpha(alpha);
+		}
+
+		void SetMaterialAlpha(float alpha)
+		{
+			Color currentColor = GeneratedMeshMaterialWireframe.color;
+			GeneratedMeshMaterialWireframe.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+			GeneratedMeshMaterialTranslucent.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
 		}
 
 		private void UpdateSceneAnchorModeText()
@@ -134,7 +153,7 @@ namespace Wave.Essence.ScenePerception.Sample
 		float timeAccForAnchorUpdate = 0;
 
 		public void TogglePassthrough()
-		{	
+		{
 			Debug.Log("Si entra");
 			statusText.text = "Togggle objects visiblility";
 			hideMeshAndAnchors = !hideMeshAndAnchors;
@@ -154,8 +173,29 @@ namespace Wave.Essence.ScenePerception.Sample
 			}
 		}
 
+		IEnumerator FadeMaterialAlpha()
+		{
+			float elapsedTime = 0f;
+			Color startColor = GeneratedMeshMaterialWireframe.color;
+			Color targetColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
+
+			while (elapsedTime < fadeDuration)
+			{
+				float alpha = Mathf.Lerp(startColor.a, targetColor.a, elapsedTime / fadeDuration);
+				GeneratedMeshMaterialWireframe.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
+				GeneratedMeshMaterialTranslucent.color =  new Color(startColor.r, startColor.g, startColor.b, alpha);
+
+				elapsedTime += Time.deltaTime;
+				yield return null;
+			}
+
+			// Ensure the final color is exactly the target color
+			GeneratedMeshMaterialWireframe.color = targetColor;
+			GeneratedMeshMaterialTranslucent.color = targetColor;
+		}
+
 		public void ToggleSceneMesh(bool visible)
-		{	
+		{
 			_scenePerceptionMeshFacade.SetVisibility(visible);
 		}
 

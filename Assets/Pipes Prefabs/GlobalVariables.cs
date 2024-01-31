@@ -4,6 +4,7 @@ using eWolf.PipeBuilder;
 using eWolf.PipeBuilder.VisionFlowScripts;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Wave.Essence.ScenePerception.Sample;
 
 public class GlobalVariables : MonoBehaviour
 {

@@ -81,4 +81,10 @@ public class WristUI : MonoBehaviour
     {
         _wristUICanvas.enabled = !_wristUICanvas.enabled;
     }
+
+    public void ToggleMainMenu()
+    {
+        globalVariables.UpdatePipesOnScene();
+        globalVariables.mainMenu.SetActive(!globalVariables.mainMenu.activeSelf);
+    }
 }
