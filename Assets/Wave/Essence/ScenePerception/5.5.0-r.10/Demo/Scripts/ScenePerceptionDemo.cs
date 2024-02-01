@@ -35,8 +35,9 @@ namespace Wave.Essence.ScenePerception.Sample
 		[SerializeField] private SwipeFunction verticalSwipe = SwipeFunction.AnchorGeneration;
 		[SerializeField] private SwipeFunction horizontalSwipe = SwipeFunction.AnchorMode;
 
-		public float fadeDuration = 5f; // Set the duration of the fade
+		public float fadeDuration = 3f; // Set the duration of the fade
 		public Slider alphaSlider; // Reference to your UI Slider
+
 
 		private enum AnchorGenerateMode
 		{
@@ -175,15 +176,17 @@ namespace Wave.Essence.ScenePerception.Sample
 
 		IEnumerator FadeMaterialAlpha()
 		{
-			float elapsedTime = 0f;
-			Color startColor = GeneratedMeshMaterialWireframe.color;
+			// Set initial alpha to 1
+			Color startColor = new Color(GeneratedMeshMaterialWireframe.color.r, GeneratedMeshMaterialWireframe.color.g, GeneratedMeshMaterialWireframe.color.b, 1f);
 			Color targetColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
+
+			float elapsedTime = 0f;
 
 			while (elapsedTime < fadeDuration)
 			{
 				float alpha = Mathf.Lerp(startColor.a, targetColor.a, elapsedTime / fadeDuration);
 				GeneratedMeshMaterialWireframe.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
-				GeneratedMeshMaterialTranslucent.color =  new Color(startColor.r, startColor.g, startColor.b, alpha);
+				GeneratedMeshMaterialTranslucent.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
 
 				elapsedTime += Time.deltaTime;
 				yield return null;
@@ -193,6 +196,7 @@ namespace Wave.Essence.ScenePerception.Sample
 			GeneratedMeshMaterialWireframe.color = targetColor;
 			GeneratedMeshMaterialTranslucent.color = targetColor;
 		}
+
 
 		public void ToggleSceneMesh(bool visible)
 		{

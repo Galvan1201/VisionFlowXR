@@ -81,10 +81,10 @@ namespace eWolf.PipeBuilder.VisionFlowScripts
                 {
                     //Changes node sphere material to deselected
                     NodeEditModeLogic nodeEditMode = node.GetComponentInChildren<NodeEditModeLogic>();
-                    // nodeEditMode.gameObject.GetComponent<Renderer>().material = nodeEditMode.deselectedMat;
+                    nodeEditMode.gameObject.GetComponent<Renderer>().material = nodeEditMode.deselectedMat;
                     // nodeEditMode.originalMaterial = Pipe.Material;
                 }
-                node.GetChild(0).localScale = new Vector3(radius * 2.5f, radius * 2.5f, radius * 2.5f);
+                node.GetChild(0).localScale = new Vector3(radius * 2.7f, radius * 2.7f, radius * 2.7f);
                 nodesPositions.Add(node.position);
             }
         }

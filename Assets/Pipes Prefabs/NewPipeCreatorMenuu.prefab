@@ -1725,12 +1725,12 @@ MonoBehaviour:
   m_SnapOnEnable: 1
   m_PositionFollowMode: 1
   m_MinDistanceAllowed: 0.01
-  m_MaxDistanceAllowed: 0.4
-  m_TimeUntilThresholdReachesMaxDistance: 0
+  m_MaxDistanceAllowed: 0.6
+  m_TimeUntilThresholdReachesMaxDistance: 3
   m_RotationFollowMode: 2
-  m_MinAngleAllowed: 20
-  m_MaxAngleAllowed: 40
-  m_TimeUntilThresholdReachesMaxAngle: 0.5
+  m_MinAngleAllowed: 15
+  m_MaxAngleAllowed: 15
+  m_TimeUntilThresholdReachesMaxAngle: 3
 --- !u!1 &3367490182143872289
 GameObject:
   m_ObjectHideFlags: 0
@@ -5022,6 +5022,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NewPipeCreatorMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 1503989109714432937, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1685777871014833739, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_Name
       value: Close button
@@ -5054,6 +5058,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Radius Slider
       objectReference: {fileID: 0}
+    - target: {fileID: 2929498751205477790, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3160279559693922915, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_Color.b
       value: 0.7647059
@@ -5070,6 +5078,38 @@ PrefabInstance:
       propertyPath: m_VertexColorAlwaysGammaSpace
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_Color.a
+      value: 0.6901961
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467281522545434781, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3621990197843538422, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -5085,6 +5125,10 @@ PrefabInstance:
     - target: {fileID: 3960868284476806768, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4113706689432233909, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4231661731251083404, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_Value
@@ -5433,6 +5477,10 @@ PrefabInstance:
     - target: {fileID: 8733504343914229104, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 8842334911941798560, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9172619666689692493, guid: dc067c577ec1b854684d789b6e727cc0, type: 3}
       propertyPath: m_IsActive

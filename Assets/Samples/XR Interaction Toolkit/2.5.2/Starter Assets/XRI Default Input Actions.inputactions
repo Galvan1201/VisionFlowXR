@@ -1281,9 +1281,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Passthrough",
+                    "name": "MeshTransparencyUp",
                     "type": "Button",
-                    "id": "1bfa4712-c4c5-4175-a183-357226938119",
+                    "id": "2bb645c6-6ddb-43a6-862d-27a8b0ead5e8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MeshTransparencyDown",
+                    "type": "Button",
+                    "id": "9e9c801d-1f9c-441c-95af-3f110b70a43b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -1524,12 +1533,23 @@
                 },
                 {
                     "name": "",
-                    "id": "aec253ec-d43a-49b1-8aa5-b4a6791f061a",
+                    "id": "2bd1bf4a-ec33-48f8-970e-0e03640097e3",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MeshTransparencyUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6776b8b3-da45-488c-a27d-09dca7074853",
                     "path": "<XRController>{RightHand}/{PrimaryButton}",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Generic XR Controller",
-                    "action": "Passthrough",
+                    "groups": "",
+                    "action": "MeshTransparencyDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
