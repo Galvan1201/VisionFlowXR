@@ -28,7 +28,7 @@ public class NodeEditModeLogic : MonoBehaviour
     private GameObject removeObject;
     private Button deleteButton;
 
-    // Split or create section logic
+    // Split or create section logic    
     private Button splitButton;
     private PipesScript pipesScript;
     private XRGrabInteractable grabInteractable;

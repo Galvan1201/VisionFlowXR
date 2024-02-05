@@ -225,6 +225,23 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    public void doExitGame()
+    {
+        warningDialog.ShowWarning(
+            "Are you sure you want to quit?, the progress will be lost",
+            () =>
+            {   
+                Debug.Log("App quit");
+                Application.Quit();
+            },
+            () =>
+            {
+                // Cancel deletion action
+                Debug.Log("Cancel quit");
+            }
+        );
+
+    }
 
     // Update is called once per frame
     void Update()

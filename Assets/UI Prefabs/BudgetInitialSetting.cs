@@ -29,6 +29,11 @@ public class BudgetInitialSetting : MonoBehaviour
         gameObject.transform.Find("Close").GetComponent<Button>().onClick.AddListener(Close);
     }
 
+    void Start()
+    {
+        ShowBudgetScreen();
+    }
+
     public void ShowBudgetScreen()
     {
         // Ensure the canvas group is active
